@@ -75,5 +75,11 @@ module.exports = (env) => {
         }),
       ],
     },
+    externals: {
+      react: 'React',
+      'react-dom/client': 'ReactDOM',
+      lodash: '_',
+      jquery: 'jQuery',
+    },
   });
 };

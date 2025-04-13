@@ -1,10 +1,17 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    var versionedJs = Url.Content("~/js/home/home.js") + "?v=" + Guid.NewGuid(); // 自訂版本參數
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/home/home.css" asp-append-version="true" />
 }
 @section Scripts {
-<script src="~/js/home/home.js" asp-append-version="true"></script>
+<script type="module">
+    import React from "https://esm.sh/react@19.1.0";
+    import ReactDOM from "https://esm.sh/react-dom@19.1.0/client";
+    window.React = React;
+    window.ReactDOM = ReactDOM;
+    import("@versionedJs").catch(console.error);
+</script>
 }
-<div id = "root" ></div>
+<div id="root"></div>

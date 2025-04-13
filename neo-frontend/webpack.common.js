@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
 // 輸出通用配置
 module.exports = (env) => {
@@ -53,9 +54,15 @@ module.exports = (env) => {
       })
     );
   }
+
+  plugins.push(
+    new webpack.DefinePlugin({
+      'process.env': JSON.stringify({}) // 模擬空的 process.env
+    })
+  );
   
   // 通用配置
-  return {
+  const config = {
     entry: entryPath, // Use dynamic entry path
     resolve: {
       extensions: ['.tsx', '.ts', '.js', '.jsx'],
@@ -86,4 +93,13 @@ module.exports = (env) => {
       hints: false,
     },
   };
+
+  if (env && env.production) {
+    config.externals = {
+      react: 'React',
+      'react-dom': 'ReactDOM',
+    };
+  }
+
+  return config;
 };
