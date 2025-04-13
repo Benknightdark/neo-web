@@ -7,7 +7,7 @@ const Home: React.FC = () => {
     <div className="page-container">
       <div className="max-w-6xl mx-auto p-6 md:p-8">
         {/* 添加一個測試元素，使用自訂類 */}
-        <div className="bg-blue-500 text-white p-4 mb-6 rounded-lg text-center">
+        <div className="bg-blue-500 text-white p-4 mb-6 rounded-lg text-center ">
           如果您能看到這個藍色背景的方塊，說明 Tailwind CSS 已正確加載！
         </div>
         

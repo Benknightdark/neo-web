@@ -93,13 +93,6 @@ module.exports = (env) => {
       hints: false,
     },
   };
-
-  if (env && env.production) {
-    config.externals = {
-      react: 'React',
-      'react-dom': 'ReactDOM',
-    };
-  }
-
+  
   return config;
 };
