@@ -1,4 +1,5 @@
 import React from 'react';
+import Home from './home/Home'; // 匯入 Home 元件
 
 const App: React.FC = () => {
   return (
@@ -25,6 +26,7 @@ const App: React.FC = () => {
           </button>
         </div>
       </div>
+      <Home /> {/* 在這裡使用 Home 元件 */}
     </div>
   );
 };
