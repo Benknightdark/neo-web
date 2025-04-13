@@ -79,8 +79,8 @@ module.exports = (env) => {
     plugins.push(
       new MiniCssExtractPlugin({
         filename: moduleName 
-          ? `../../css/${moduleName}/styles.[contenthash].css` 
-          : 'styles.[contenthash].css',
+          ? `../../css/${moduleName}/${moduleName}.css` 
+          : 'styles.css',
       })
     );
   }
@@ -90,7 +90,7 @@ module.exports = (env) => {
     entry: entryPath, // Use dynamic entry path
     output: {
       path: finalOutputPath, // Dynamic output path based on env and module
-      filename: 'bundle.[contenthash].js',
+      filename: moduleName ? `${moduleName}.js` : 'bundle.js',
       clean: true, // Clean the specific output directory
       publicPath: moduleName ? `/${moduleName}/` : '/',
     },
