@@ -10,6 +10,7 @@
     "build:backend": "node scripts/build-backend.js",
     "test": "jest",
     "tailwind:watch": "tailwindcss -i ./src/styles.css -o ./src/tailwind-output.css --watch",
+    "tailwind:module": "tailwindcss -i ./src/$MODULE/style.css -o ./src/$MODULE/tailwind-output.css --watch",
     "tailwind:build": "tailwindcss -i ./src/styles.css -o ./src/tailwind-output.css"
   },
   "author": "",

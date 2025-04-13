@@ -1,2 +1,15 @@
-/* 此文件可以保留空白，因為我們已經使用 Tailwind CSS */
-/* 如有需要自定義樣式，可以在這裡添加 */
+/* Home 模組專用樣式檔案 */
+@import "../styles.css";
+
+/* 自定義樣式可以添加在這裡 */
+.page-container {
+    @apply min-h-screen bg-gray-50;
+  }
+  
+  .main-title {
+    @apply text-4xl font-bold text-blue-600;
+  }
+  
+  .custom-btn {
+    @apply bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors;
+  }
