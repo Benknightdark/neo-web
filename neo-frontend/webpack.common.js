@@ -49,7 +49,6 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         template: templatePath, // Use dynamic template path
         filename: 'index.html', // Always output as index.html in the root
-        // 移除 scriptLoading: 'module' 設置，使用默認的 'defer'
         inject: true, // 確保 JS 和 CSS 都被自動注入
       })
     );
@@ -74,7 +73,6 @@ module.exports = (env) => {
           exclude: /node_modules/,
           use: {
             loader: 'ts-loader',
-            // 移除特定的編譯器選項，使用 tsconfig.json 的設定
           },
         },
         {

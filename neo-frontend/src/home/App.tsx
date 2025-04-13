@@ -1,11 +1,9 @@
 import React from 'react';
-import './style.css';
 import Home from './Home';
 
 function App() {
   return (
-    <div>
-      <h1>Home Module</h1>
+    <div className="min-h-screen bg-gray-50 py-4">
       <Home />
     </div>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './style.css'; // 直接在入口文件中引入樣式
+import '../../src/tailwind-output.css'; // 引入由 Tailwind CLI 生成的 CSS 文件
 import App from './App';
 
 const root = ReactDOM.createRoot(

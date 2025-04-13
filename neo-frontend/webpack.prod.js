@@ -46,15 +46,7 @@ module.exports = (env) => {
           test: /\.css$/,
           use: [
             MiniCssExtractPlugin.loader,
-            'css-loader',
-            {
-              loader: 'postcss-loader',
-              options: {
-                postcssOptions: {
-                  plugins: [require('@tailwindcss/postcss'), require('autoprefixer')],
-                },
-              },
-            },
+            'css-loader', // 移除 postcss-loader
           ],
         },
       ],

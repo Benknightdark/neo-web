@@ -19,24 +19,7 @@ module.exports = (env) => {
       rules: [
         {
           test: /\.css$/,
-          use: [
-            { 
-              loader: 'style-loader', 
-              options: { 
-                injectType: 'styleTag',
-                insert: 'head'
-              } 
-            },
-            'css-loader',
-            {
-              loader: 'postcss-loader',
-              options: {
-                postcssOptions: {
-                  plugins: [require('@tailwindcss/postcss'), require('autoprefixer')],
-                },
-              },
-            },
-          ],
+          use: ['style-loader', 'css-loader'], // 簡化配置，移除 postcss-loader
         },
       ],
     },
