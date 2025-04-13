@@ -2,6 +2,7 @@ const { merge } = require('webpack-merge');
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin'); // 引入 CssMinimizerPlugin
 const commonConfig = require('./webpack.common');
 
 module.exports = (env) => {
@@ -60,6 +61,16 @@ module.exports = (env) => {
             format: {
               comments: skipLicense ? false : 'some', // 當 skipLicense 為 true 時忽略所有註釋
             },
+          },
+        }),
+        new CssMinimizerPlugin({ // 加入 CssMinimizerPlugin
+          minimizerOptions: {
+            preset: [
+              'default',
+              {
+                discardComments: { removeAll: true }, // 移除所有註解
+              },
+            ],
           },
         }),
       ],
