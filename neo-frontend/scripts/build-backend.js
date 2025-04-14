@@ -107,11 +107,6 @@ function processJsFile(tempDistPath, file, jsTargetDir, moduleName) {
   const sourcePath = path.join(tempDistPath, file);
   let content = fs.readFileSync(sourcePath, 'utf8');
   
-  // 移除版權和許可證注釋
-  content = content.replace(/\/\*\*[\s\S]*?Copyright[\s\S]*?\*\//g, '');
-  content = content.replace(/\/\*[\s\S]*?@license[\s\S]*?\*\//g, '');
-  content = content.replace(/\/\/ Copyright[\s\S]*?\n/g, '');
-  
   // 寫入處理後的 JS 文件到目標位置
   const targetPath = path.join(jsTargetDir, `${moduleName}.js`);
   fs.writeFileSync(targetPath, content, 'utf8');
