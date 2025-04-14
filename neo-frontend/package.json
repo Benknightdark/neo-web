@@ -4,8 +4,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "vite",
-    "start": "node scripts/start.js",
+    "start": "vite .",
     "build": "node scripts/build-backend.js",
     "build:dev": "vite build --mode development",
     "preview": "vite preview"

@@ -1,6 +1,7 @@
 /**
  * 構建前端模組到後端目錄的腳本
- * 使用: npm run build:backend <模組名稱>
+ * 使用: npm run build [模組名稱]
+ * 若未提供模組名稱，則會自動尋找 src 目錄下的所有模組並執行打包
  */
 import { spawn } from 'child_process';
 import path from 'path';
@@ -10,13 +11,60 @@ import { fileURLToPath } from 'url';
 // 獲取當前文件的目錄路徑
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, '..');
+const srcDir = path.resolve(projectRoot, 'src');
 
 // 獲取模組名稱參數
 const moduleName = process.argv[2];
 
-if (!moduleName) {
-  console.error('請提供模組名稱，例如: npm run build:backend home');
-  process.exit(1);
+/**
+ * 檢查目錄是否為有效的模組 (包含 index.ts 或 index.tsx)
+ * @param {string} dirPath - 目錄路徑
+ * @returns {boolean} - 是否為有效模組
+ */
+function isValidModule(dirPath) {
+  try {
+    const isDirectory = fs.statSync(dirPath).isDirectory();
+    if (!isDirectory) return false;
+    
+    const files = fs.readdirSync(dirPath);
+    return files.some(file => file === 'index.ts' || file === 'index.tsx');
+  } catch (err) {
+    return false;
+  }
+}
+
+/**
+ * 從 src 目錄中尋找所有有效模組
+ * @returns {string[]} - 模組名稱列表
+ */
+function findAllModules() {
+  const modules = [];
+  
+  try {
+    // 檢查 src 目錄是否存在
+    if (!fs.existsSync(srcDir)) {
+      console.error(`錯誤: src 目錄不存在: ${srcDir}`);
+      return modules;
+    }
+    
+    // 讀取 src 目錄下的所有項目
+    const items = fs.readdirSync(srcDir);
+    
+    // 過濾出有效模組
+    for (const item of items) {
+      const itemPath = path.join(srcDir, item);
+      
+      // 檢查是否為有效模組目錄
+      if (isValidModule(itemPath)) {
+        modules.push(item);
+      }
+    }
+  } catch (err) {
+    console.error(`尋找模組時出錯: ${err.message}`);
+  }
+  
+  return modules;
 }
 
 /**
@@ -126,11 +174,6 @@ function processCssFile(tempDistPath, file, cssTargetDir, moduleName) {
   // 讀取 CSS 文件內容
   const sourcePath = path.join(tempDistPath, file);
   let content = fs.readFileSync(sourcePath, 'utf8');
-  
-  // 移除版權和許可證注釋
-  content = content.replace(/\/\*\*[\s\S]*?Copyright[\s\S]*?\*\//g, '');
-  content = content.replace(/\/\*[\s\S]*?@license[\s\S]*?\*\//g, '');
-  
   // 寫入處理後的 CSS 文件到目標位置
   const targetPath = path.join(cssTargetDir, `${moduleName}.css`);
   fs.writeFileSync(targetPath, content, 'utf8');
@@ -139,13 +182,15 @@ function processCssFile(tempDistPath, file, cssTargetDir, moduleName) {
 }
 
 /**
- * 主函數: 執行構建流程
+ * 構建單個模組
+ * @param {string} moduleName - 模組名稱 
+ * @returns {Promise<boolean>} - 構建是否成功
  */
-async function buildModule() {
+async function buildModule(moduleName) {
   console.log(`開始構建模組: ${moduleName} 到後端目錄...`);
 
   // 設置構建輸出目錄 - 臨時目錄
-  const tempDistPath = path.resolve(__dirname, '../dist-temp');
+  const tempDistPath = path.resolve(__dirname, `../dist-temp-${moduleName}`);
 
   // 確保臨時輸出目錄存在
   if (!fs.existsSync(tempDistPath)) {
@@ -200,7 +245,7 @@ async function buildModule() {
           console.log(`模組 ${moduleName} 已成功構建到指定目錄:`);
           console.log(`- JS: /js/${moduleName}/${moduleName}.js`);
           console.log(`- CSS: /css/${moduleName}/${moduleName}.css`);
-          resolve();
+          resolve(true);
         } else {
           const error = new Error(`構建模組 ${moduleName} 部分失敗，未找到所有輸出文件`);
           console.error(error.message);
@@ -215,8 +260,67 @@ async function buildModule() {
   });
 }
 
+/**
+ * 批量構建所有模組
+ * @param {string[]} modules - 模組名稱列表
+ * @returns {Promise<void>}
+ */
+async function buildAllModules(modules) {
+  console.log(`=== 開始構建 ${modules.length} 個模組 ===`);
+  const results = [];
+  
+  // 逐個構建模組
+  for (const moduleName of modules) {
+    console.log(`\n=== 構建 ${moduleName} (${modules.indexOf(moduleName) + 1}/${modules.length}) ===`);
+    try {
+      await buildModule(moduleName);
+      results.push({ moduleName, success: true });
+    } catch (err) {
+      console.error(`構建模組 ${moduleName} 失敗: ${err.message}`);
+      results.push({ moduleName, success: false, error: err.message });
+    }
+  }
+  
+  // 輸出構建報告
+  console.log('\n=== 構建報告 ===');
+  const successCount = results.filter(r => r.success).length;
+  console.log(`總計: ${modules.length} 個模組, 成功: ${successCount}, 失敗: ${modules.length - successCount}`);
+  
+  if (modules.length - successCount > 0) {
+    console.log('\n失敗的模組:');
+    results.filter(r => !r.success).forEach(r => {
+      console.log(`- ${r.moduleName}: ${r.error}`);
+    });
+    throw new Error('部分模組構建失敗');
+  }
+}
+
+/**
+ * 主函數: 執行構建流程
+ */
+async function main() {
+  try {
+    if (moduleName) {
+      // 構建指定模組
+      await buildModule(moduleName);
+    } else {
+      // 尋找並構建所有模組
+      const modules = findAllModules();
+      
+      if (modules.length === 0) {
+        console.error('錯誤: 在 src 目錄下找不到任何有效模組');
+        process.exit(1);
+      }
+      
+      console.log(`在 src 目錄下找到 ${modules.length} 個模組: ${modules.join(', ')}`);
+      await buildAllModules(modules);
+    }
+    console.log('構建完成!');
+  } catch (err) {
+    console.error(`構建過程中發生錯誤: ${err.message}`);
+    process.exit(1);
+  }
+}
+
 // 執行主函數
-buildModule().catch(err => {
-  console.error(`構建過程中發生錯誤: ${err.message}`);
-  process.exit(1);
-});
+main();
