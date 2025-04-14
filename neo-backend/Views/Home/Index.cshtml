@@ -1,6 +1,5 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-    var versionedJs = Url.Content("~/js/home/home.js") + "?v=" + Guid.NewGuid(); // 自訂版本參數
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/home/home.css" asp-append-version="true" />
