@@ -4,16 +4,11 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node scripts/start-with-tailwind.js",
-    "start:tailwind": "node scripts/start-with-tailwind.js",
     "dev": "vite",
-    "build": "tsc && vite build",
+    "start": "node scripts/start.js",
+    "build": "node scripts/build-backend.js",
     "build:dev": "vite build --mode development",
-    "build:backend": "node scripts/build-backend.js",
-    "preview": "vite preview",
-    "tailwind:watch": "tailwindcss -i ./src/styles.css -o ./src/tailwind-output.css --watch",
-    "tailwind:module": "tailwindcss -i ./src/$MODULE/style.css -o ./src/$MODULE/tailwind-output.css --watch",
-    "tailwind:build": "tailwindcss -i ./src/styles.css -o ./src/tailwind-output.css"
+    "preview": "vite preview"
   },
   "author": "",
   "license": "ISC",

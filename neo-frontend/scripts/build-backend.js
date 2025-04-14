@@ -27,43 +27,18 @@ if (!moduleName) {
  */
 function createTempViteConfig(moduleName, tempDistPath) {
   const tempConfigPath = path.resolve(__dirname, '../temp-vite.config.js');
+  const templatePath = path.resolve(__dirname, './vite-module-template.js');
+  const projectRoot = path.resolve(__dirname, '..');
   
-  const configContent = `
-// 臨時 Vite 構建配置
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite';
-import path from 'path';
-
-export default defineConfig({
-  plugins: [
-    react(),
-    tailwindcss()
-  ],
-  build: {
-    outDir: '${tempDistPath.replace(/\\/g, '\\\\')}',
-    emptyOutDir: true,
-    assetsDir: '',
-    rollupOptions: {
-      input: {
-        ${moduleName}: path.resolve(__dirname, 'src/${moduleName}/index.tsx')
-      },
-      output: {
-        entryFileNames: '[name].js',
-        chunkFileNames: '[name].js',
-        assetFileNames: (assetInfo) => {
-          if (/\\.css$/.test(assetInfo.name)) {
-            return '[name].css';
-          }
-          return '[name].[ext]';
-        },
-      },
-    },
-  },
-  base: '',
-});
-`;
-
+  // 讀取模板文件
+  let configContent = fs.readFileSync(templatePath, 'utf8');
+  
+  // 替換模板中的變量
+  configContent = configContent
+    .replace(/TEMP_DIST_PATH/g, tempDistPath.replace(/\\/g, '\\\\'))
+    .replace(/MODULE_NAME/g, moduleName)
+    .replace(/PROJECT_ROOT/g, projectRoot.replace(/\\/g, '\\\\'));
+  
   fs.writeFileSync(tempConfigPath, configContent, 'utf8');
   console.log(`已創建臨時構建配置: ${tempConfigPath}`);
   return tempConfigPath;
