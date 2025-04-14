@@ -1,0 +1,108 @@
+@import '../base-style.css';
+
+/* Privacy 頁面專屬樣式 */
+body {
+  background-color: #f7fafc;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  color: #2d3748;
+  line-height: 1.6;
+  position: relative;
+}
+
+/* 添加漸變背景裝飾 */
+body:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 300px;
+  background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+  z-index: -1;
+  opacity: 0.05;
+}
+
+/* 隱私政策內容樣式 */
+.privacy-content p {
+  margin-bottom: 1.2rem;
+  color: #4a5568;
+}
+
+.privacy-content ul {
+  margin-bottom: 1.5rem;
+}
+
+/* 動畫效果 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.privacy-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+/* 滾動條美化 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+  .privacy-container {
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+
+  body:before {
+    height: 200px;
+  }
+
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 0.95rem;
+  }
+}
+
+/* 打印樣式優化 */
+@media print {
+  .privacy-container {
+    padding: 0;
+    max-width: 100%;
+  }
+
+  .policy-section {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+  
+  .icon-container {
+    display: none;
+  }
+  
+  body:before {
+    display: none;
+  }
+}
