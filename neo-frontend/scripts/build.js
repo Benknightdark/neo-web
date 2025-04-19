@@ -13,9 +13,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const projectRoot = path.resolve(__dirname, '..');
 const srcDir = path.resolve(projectRoot, 'src');
-
-// 獲取模組名稱參數
-const moduleName = process.argv[2];
+const backendRootFolder = 'neo-backend/wwwroot';
+// 支援 npm run build home, privacy 這種寫法，不用引號也能正確解析
+const moduleArg = process.argv.slice(2).join(' ');
+let moduleNames = moduleArg
+  ? moduleArg.split(/[,，]/).map(m => m.trim().replace(/\s+/g, '')).filter(Boolean)
+  : [];
+console.log('要打包的模組: %s', moduleNames.length > 0 ? moduleNames.join(',') : '所有模組');
+console.log('-----------------');
 
 /**
  * 檢查目錄是否為有效的模組 (包含 index.ts 或 index.tsx)
@@ -300,9 +305,11 @@ async function buildAllModules(modules) {
  */
 async function main() {
   try {
-    if (moduleName) {
+    if (moduleNames.length > 0) {
       // 構建指定模組
-      await buildModule(moduleName);
+      for (const moduleName of moduleNames) {
+        await buildModule(moduleName);
+      }
     } else {
       // 尋找並構建所有模組
       const modules = findAllModules();
