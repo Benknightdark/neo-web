@@ -14,21 +14,21 @@
 
 ## 專案概述
 
-Neo-Web 是一個使用 .NET 9.0 作為後端、React 和 Vue 作為前端的全端網頁應用。專案採用模組化設計，前端模組可以獨立開發並按需打包部署到後端。
+Neo-Web 是一個使用 **.NET 10.0** 作為後端、**Vue 3** 作為前端的全端網頁應用。專案採用模組化設計，前端模組可以獨立開發並按需打包部署到後端。
 
 ### 主要技術棧
 
-- **後端**：.NET 9.0、ASP.NET Core MVC
-- **前端**：React 19、Vue、TypeScript、Tailwind CSS
-- **構建工具**：Vite 6、npm
+- **後端**：.NET 10.0、ASP.NET Core MVC
+- **前端**：Vue 3 (Composition API)、TypeScript、Tailwind CSS 4
+- **構建工具**：Vite 7、npm
 
 ## 系統需求
 
 在開始開發前，請確保您的系統已安裝以下軟體：
 
 - **Node.js**：v20.0.0 或更高版本
-- **.NET SDK**：.NET 9.0 或更高版本
-- **IDE 推薦**：Visual Studio 2022、Visual Studio Code 配合 C# 擴展
+- **.NET SDK**：.NET 10.0 或更高版本
+- **IDE 推薦**：Visual Studio 2022、Visual Studio Code (配合 C# Dev Kit 與 Volar 擴展)
 
 ## 專案結構
 
@@ -38,31 +38,28 @@ Neo-Web 是一個使用 .NET 9.0 作為後端、React 和 Vue 作為前端的全
 neo-web/
 ├── neo-web.sln                 # 解決方案文件
 ├── neo-backend/                # 後端 .NET 專案
-│   ├── Controllers/            # 控制器
+│   ├── Controllers/            # 控制器 (MVC 路由入口)
 │   ├── Models/                 # 數據模型
-│   ├── Views/                  # 視圖模板
-│   ├── wwwroot/                # 靜態資源目錄
-│   │   ├── css/               # 樣式文件
-│   │   ├── js/                # 腳本文件
+│   ├── Views/                  # 視圖模板 (Razor Pages)
+│   ├── wwwroot/                # 靜態資源目錄 (前端打包後的輸出地)
+│   │   ├── css/               # 模組樣式檔案
+│   │   ├── js/                # 模組腳本檔案
 │   │   └── lib/               # 第三方庫
 │   ├── Program.cs             # 程序入口點
-│   └── neo-backend.csproj     # 專案配置文件
+│   └── neo-backend.csproj     # 專案配置文件 (Target: net10.0)
 └── neo-frontend/              # 前端專案
     ├── src/                   # 源代碼目錄
-    │   ├── base-style.css     # 全局樣式
-    │   ├── home/              # 首頁模組
-    │   │   ├── App.tsx        # React 組件
-    │   │   ├── Home.tsx       # 頁面組件
-    │   │   ├── index.html     # HTML 模板
-    │   │   ├── index.tsx      # 入口文件
-    │   │   └── style.css      # 模組樣式
-    │   └── privacy/           # 隱私頁模組
-    │       ├── Privacy.vue    # Vue 組件
-    │       ├── index.html     # HTML 模板
+    │   ├── base-style.css     # 全局基礎樣式
+    │   ├── home/              # 首頁模組 (Vue 3)
+    │   │   ├── App.vue        # 根組件
+    │   │   ├── index.ts       # 入口文件
+    │   │   └── style.css      # 模組專屬樣式
+    │   └── privacy/           # 隱私頁模組 (Vue 3)
+    │       ├── Privacy.vue    # 頁面組件
     │       ├── index.ts       # 入口文件
-    │       └── style.css      # 模組樣式
+    │       └── style.css      # 模組專屬樣式
     ├── scripts/               # 構建腳本
-    │   ├── build-backend.js   # 模組打包腳本
+    │   ├── build.js           # 模組打包與部署腳本
     │   └── vite-module-template.js # 構建配置模板
     ├── package.json           # npm 配置文件
     ├── vite.config.ts         # Vite 配置
@@ -79,15 +76,15 @@ git clone <專案倉庫URL>
 cd neo-web
 ```
 
-### 2. 安裝後端相依套件
+### 2. 安裝相依套件
 
+**後端：**
 ```bash
 cd neo-backend
 dotnet restore
 ```
 
-### 3. 安裝前端相依套件
-
+**前端：**
 ```bash
 cd ../neo-frontend
 npm install
@@ -104,129 +101,87 @@ npm install
    dotnet run
    ```
 
-   後端服務會在 https://localhost:5001 或 http://localhost:5000 啟動。
+   服務通常會在 https://localhost:7146 或 http://localhost:5058 啟動。
 
-2. **API 開發**
-
-   在 `Controllers` 資料夾中新增或修改控制器。
-
-3. **視圖開發**
-
-   在 `Views` 資料夾中新增或修改視圖模板。
+2. **MVC 開發**
+   - 在 `Controllers` 中新增控制器。
+   - 在 `Views` 中新增 Razor 視圖，並引用打包後的資源。
 
 ### 前端開發
 
-1. **啟動前端開發服務器**
+1. **啟動 Vite 開發伺服器**
 
    ```bash
    cd neo-frontend
    npm start
    ```
 
-   前端開發服務器會在 http://localhost:3000 啟動。
+   開發伺服器預設於 http://localhost:3000。
 
-2. **模組開發**
-
-   每個模組應包含以下文件：
-   - `index.ts` 或 `index.tsx`：模組入口點
-   - 組件文件（`.tsx` 或 `.vue`）
-   - `style.css`：模組專用樣式
+2. **模組開發規範**
+   - 每個模組必須包含 `index.ts` 作為入口點。
+   - 使用 Vue 3 單檔案組件 (`.vue`) 進行開發。
+   - 樣式應優先使用 Tailwind CSS 類別。
 
 3. **新增模組**
-
-   在 `src` 目錄下創建新的資料夾，並包含必要的入口文件：
-
+   在 `src` 目錄下創建資料夾：
    ```bash
-   mkdir -p src/new-module
-   touch src/new-module/index.tsx src/new-module/NewModule.tsx src/new-module/style.css
+   mkdir -p src/new-page
+   touch src/new-page/index.ts src/new-page/App.vue src/new-page/style.css
    ```
 
 ## 打包與部署
 
-### 前端打包
+### 前端自動化打包
 
-前端模組可以單獨或批量打包部署到後端：
+前端模組會被編譯並直接部署到後端的 `wwwroot`：
 
-1. **打包單個模組**
-
+1. **打包特定模組**
    ```bash
-   cd neo-frontend
    npm run build <模組名稱>
+   # 例如: npm run build home
    ```
 
-   例如：`npm run build home`
-
 2. **打包所有模組**
-
    ```bash
-   cd neo-frontend
    npm run build
    ```
 
-3. **打包過程說明**
+3. **打包產出位置**
+   - JS 檔案：`neo-backend/wwwroot/js/{模組名稱}/{模組名稱}.js`
+   - CSS 檔案：`neo-backend/wwwroot/css/{模組名稱}/{模組名稱}.css`
 
-   打包流程會：
-   - 根據模組名稱創建臨時的 Vite 配置文件
-   - 檢測模組使用的框架（React 或 Vue）
-   - 編譯並優化模組代碼
-   - 生成 JS 和 CSS 資源
-   - 將資源複製到後端的 `wwwroot` 目錄中相應的位置
-   
-   打包完成後，資源會位於：
-   - JS 文件：`neo-backend/wwwroot/js/{模組名稱}/{模組名稱}.js`
-   - CSS 文件：`neo-backend/wwwroot/css/{模組名稱}/{模組名稱}.css`
+### 後端發佈
 
-### 後端打包與發佈
-
-1. **打包後端應用**
-
-   ```bash
-   cd neo-backend
-   dotnet publish -c Release
-   ```
-
-2. **發佈到 IIS 或其他宿主環境**
-
-   ```bash
-   dotnet publish -c Release -o ./publish
-   ```
-
-   發佈後的檔案位於 `./publish` 資料夾中，可以直接部署到 IIS 或其他支援 .NET 的宿主環境。
+```bash
+cd neo-backend
+dotnet publish -c Release -o ./publish
+```
 
 ## 故障排除
 
 ### 常見問題
 
-1. **前端模組打包失敗**
+1. **TypeScript 類型錯誤**
+   - 確保 `tsconfig.json` 中的 `jsx` 設置為 `preserve`。
+   - 檢查是否殘留了 React 的類型引用。
 
-   - 確認模組目錄下有 `index.ts` 或 `index.tsx` 入口文件
-   - 檢查 console 錯誤訊息，修復缺失的引用或語法錯誤
-   - 確認使用的框架（React/Vue）對應的插件已正確安裝
+2. **樣式未更新**
+   - 確認 `npm run build` 已正確執行。
+   - 檢查瀏覽器快取或後端 `wwwroot` 檔案是否已覆蓋。
 
-2. **後端找不到前端資源**
+3. **找不到入口文件**
+   - 模組目錄內必須存在 `index.ts`。本專案已移除對 `.tsx` 的支援。
 
-   - 確認資源是否已正確打包到 `wwwroot` 的對應目錄
-   - 檢查後端是否啟用了靜態檔案服務
-   - 確認資源引用路徑是否正確
+### 建議工具
 
-3. **開發工具相容性問題**
-
-   - Node.js 版本不相容：確保使用 Node.js v20.0.0 或更新版本
-   - .NET SDK 版本不匹配：更新至 .NET 9.0 或設置適當的全域 JSON 配置
-
-### 建議的開發工具
-
-- **Visual Studio Code 擴展**：
-  - C# Dev Kit
-  - ESLint
-  - Prettier
-  - Tailwind CSS IntelliSense
-  - React 開發工具
-  - Volar（Vue 3）
+- **VS Code 擴展**：
+  - **C# Dev Kit**: .NET 開發必備。
+  - **Volar (Vue - Official)**: Vue 3 開發環境。
+  - **Tailwind CSS IntelliSense**: 類別提示。
 
 ### 開發最佳實踐
 
-1. 前端模組應保持獨立，避免跨模組依賴
-2. 使用 Tailwind CSS 工具類減少自定義 CSS 的需求
-3. 共用組件應放在專用目錄方便重用
-4. 定期執行 `npm update` 和 `dotnet restore` 更新相依套件
+1. **模組解耦**：避免模組間的直接引用，共用邏輯應提取至公用目錄。
+2. **CSS 現代化**：善用 Tailwind 4 的新特性，減少自定義 CSS 量。
+3. **定期更新**：執行 `dotnet restore` 與 `npm install` 保持環境最新。

@@ -12,11 +12,11 @@
     "noFallthroughCasesInSwitch": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "sourceMap": true,
+    "jsx": "preserve",
     // 添加對 Vue 的支援
     "types": ["vite/client"],
     "paths": {

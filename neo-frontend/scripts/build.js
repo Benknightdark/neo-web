@@ -33,7 +33,7 @@ function isValidModule(dirPath) {
     if (!isDirectory) return false;
     
     const files = fs.readdirSync(dirPath);
-    return files.some(file => file === 'index.ts' || file === 'index.tsx');
+    return files.some(file => file === 'index.ts');
   } catch (err) {
     return false;
   }
