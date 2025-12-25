@@ -49,6 +49,9 @@ export default defineConfig({
           }
           return '[name].[ext]';
         },
+        paths: {
+          vue: 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.5.13/vue.esm-browser.min.js'
+        }
       },
     },
   },
