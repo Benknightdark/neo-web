@@ -36,6 +36,7 @@ export default defineConfig({
     emptyOutDir: true,
     assetsDir: '',
     rollupOptions: {
+      external: ['vue'],
       input: {
         MODULE_NAME: entryFile
       },
