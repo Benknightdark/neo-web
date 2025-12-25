@@ -41,17 +41,10 @@ export default defineConfig({
         MODULE_NAME: entryFile
       },
       output: {
+        format: 'es',
         entryFileNames: '[name].js',
         chunkFileNames: '[name].js',
-        assetFileNames: (assetInfo) => {
-          if (/\.css$/.test(assetInfo.name)) {
-            return '[name].css';
-          }
-          return '[name].[ext]';
-        },
-        paths: {
-          vue: 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.5.13/vue.esm-browser.min.js'
-        }
+        assetFileNames: '[name][extname]'
       },
     },
   },
