@@ -14,9 +14,6 @@ export default defineConfig({
     outDir: 'dist',
     emptyOutDir: true,
   },
-  css: {
-    postcss: true,
-  },
   server: {
     port: 3000,
     open: true,
