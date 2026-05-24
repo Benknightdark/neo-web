@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import LayoutComponent from '../components/LayoutComponent.vue';
-import Home from './Home.vue';
+import Privacy from './Privacy.vue';
 </script>
 
 <template>
-  <LayoutComponent title="首頁">
-    <Home />
+  <LayoutComponent title="隱私政策">
+    <Privacy />
   </LayoutComponent>
 </template>

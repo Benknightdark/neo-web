@@ -26,10 +26,10 @@ namespace neo_backend.TagHelpers
         {
             // 將 <import-map> 標籤替換為 <script>
             output.TagName = "script";
-            
+
             // 強制設定 type="importmap"
             output.Attributes.SetAttribute("type", "importmap");
-            
+
             // 確保標籤有開始和結束 (不是 self-closing)
             output.TagMode = TagMode.StartTagAndEndTag;
 
@@ -99,7 +99,7 @@ namespace neo_backend.TagHelpers
                         // 加上版本號
                         // AddFileVersionToPath 需要 PathString
                         var versionedPath = _fileVersionProvider.AddFileVersionToPath(path, path);
-                        
+
                         if (versionedPath != path)
                         {
                             map[kvp.Key] = versionedPath;

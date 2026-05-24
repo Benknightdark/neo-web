@@ -1,187 +1,122 @@
-# Neo-Web 開發與打包文件
+# Neo-Web 全端專案說明文件 (Root)
 
-本文件詳細說明 Neo-Web 專案的開發環境設置、開發流程以及打包部署過程。
+Neo-Web 是一個採用 **混合式 (Hybrid) 全端架構** 的網頁應用程式。專案將強大的 **.NET 10.0 MVC** 後端與現代化的 **Vue 3 (Vite 8 + TS 6 + Tailwind 4)** 前端完美結合，前端組件以「模組島嶼 (Module Islands)」的形式嵌入後端 Razor Views 網頁中。**在此架構下，.NET 後端專案同時扮演「前端靜態資源託管」與「提供後端 API 服務」的雙重關鍵角色**。
 
-## 目錄
+---
 
-1. [專案概述](#專案概述)
-2. [系統需求](#系統需求)
-3. [專案結構](#專案結構)
-4. [開發環境設置](#開發環境設置)
-5. [開發流程](#開發流程)
-6. [打包與部署](#打包與部署)
-7. [故障排除](#故障排除)
+## 🗺️ 專案總覽地圖
 
-## 專案概述
+本解決方案由以下兩個主要專案目錄構成，各自擁有獨立的開發說明文件：
 
-Neo-Web 是一個使用 **.NET 10.0** 作為後端、**Vue 3** 作為前端的全端網頁應用。專案採用模組化設計，前端模組可以獨立開發並按需打包部署到後端。
+* 📂 **[neo-backend/](file:///Users/ben/Projects/neo-web/neo-backend)**: ASP.NET Core 10.0 MVC 後端伺服器與靜態資源宿主。
+  👉 *詳細開發指引請參閱：[後端開發文件 (neo-backend/README.md)](file:///Users/ben/Projects/neo-web/neo-backend/README.md)*
+* 📂 **[neo-frontend/](file:///Users/ben/Projects/neo-web/neo-frontend)**: Vite 8 + Vue 3.5 + TS 6 前端模組島嶼源碼。
+  👉 *詳細開發指引請參閱：[前端開發文件 (neo-frontend/README.md)](file:///Users/ben/Projects/neo-web/neo-frontend/README.md)*
 
-### 主要技術棧
+---
 
-- **後端**：.NET 10.0、ASP.NET Core MVC
-- **前端**：Vue 3 (Composition API)、TypeScript、Tailwind CSS 4
-- **構建工具**：Vite 7、npm
+## 🏗️ 混合式架構設計 (How it Works)
 
-## 系統需求
+本專案採用「**開發雙端、正式單端**」的混合式架構。此設計既能享有前端極速的熱重載 (HMR) 開發體驗，又能在正式佈署時免除維護兩台伺服器的負擔。**正式佈署後，.NET 後端將同時負責前端靜態資源的託管與提供運作所需的後端 API 服務**。
 
-在開始開發前，請確保您的系統已安裝以下軟體：
+![專案混合式架構設計圖](docs/hybrid_architecture.png)
 
-- **Node.js**：v20.0.0 或更高版本
-- **.NET SDK**：.NET 10.0 或更高版本
-- **IDE 推薦**：Visual Studio 2022、Visual Studio Code (配合 C# Dev Kit 與 Volar 擴展)
+### 1. 開發階段 (啟動雙伺服器)
 
-## 專案結構
+為了維持極佳的開發體驗，開發時我們會同時開啟兩台伺服器：
+* **Vite 開發伺服器 (連接埠 3000)**：提供前端 Vue 3 元件的即時轉譯與快速熱重載 (HMR)，讓任何前端修改都能在瀏覽器中秒級更新。
+* **.NET MVC 後端伺服器**：負責 C# 控制器路由、提供後端 API 服務（供前端 Vue 元件調用）、資料庫存取以及伺服器端渲染 (SSR/Razor)。
 
-專案採用以下結構組織代碼：
+### 2. 正式佈署階段 (僅需佈署一台伺服器)
 
-```
-neo-web/
-├── neo-web.sln                 # 解決方案文件
-├── neo-backend/                # 後端 .NET 專案
-│   ├── Controllers/            # 控制器 (MVC 路由入口)
-│   ├── Models/                 # 數據模型
-│   ├── Views/                  # 視圖模板 (Razor Pages)
-│   ├── wwwroot/                # 靜態資源目錄 (前端打包後的輸出地)
-│   │   ├── css/               # 模組樣式檔案
-│   │   ├── js/                # 模組腳本檔案
-│   │   └── lib/               # 第三方庫
-│   ├── Program.cs             # 程序入口點
-│   └── neo-backend.csproj     # 專案配置文件 (Target: net10.0)
-└── neo-frontend/              # 前端專案
-    ├── src/                   # 源代碼目錄
-    │   ├── base-style.css     # 全局基礎樣式
-    │   ├── home/              # 首頁模組 (Vue 3)
-    │   │   ├── App.vue        # 根組件
-    │   │   ├── index.ts       # 入口文件
-    │   │   └── style.css      # 模組專屬樣式
-    │   └── privacy/           # 隱私頁模組 (Vue 3)
-    │       ├── Privacy.vue    # 頁面組件
-    │       ├── index.ts       # 入口文件
-    │       └── style.css      # 模組專屬樣式
-    ├── scripts/               # 構建腳本
-    │   ├── build.js           # 模組打包與部署腳本
-    │   └── vite-module-template.js # 構建配置模板
-    ├── package.json           # npm 配置文件
-    ├── vite.config.ts         # Vite 配置
-    ├── tailwind.config.js     # Tailwind 配置
-    └── tsconfig.json          # TypeScript 配置
-```
+為了極致簡化正式環境的佈署與運維難度，正式環境下**只會佈署並執行後端 .NET 伺服器**：
+* **編譯產物搬運**：在發布前，前端執行 `npm run build` 會呼叫自動打包搬運腳本 (`scripts/build.js`)，使用 Vite 將所有模組編譯並壓縮成靜態資源檔案，並直接輸出至後端的 `neo-backend/wwwroot/` 目錄中。
+* **一體化託管與 API 提供**：當執行 `dotnet publish` 發布後端時，所有編譯好的前端 JS/CSS 靜態資源都會包裝至後端的 `wwwroot` 中。正式運行時，該 .NET 伺服器會**同時負責託管靜態網頁資源，並作為 API 伺服器提供資料接口**，完全不需在正式環境運行 Node.js/Vite。
 
-## 開發環境設置
+---
 
-### 1. 克隆專案
+## 🛠️ 全端快速開發與佈署流程
 
-```bash
-git clone <專案倉庫URL>
-cd neo-web
-```
+### 💻 本地開發流程 (開發階段)
 
-### 2. 安裝相依套件
+若要開始本地全端整合開發，請按照以下步驟啟動雙端服務：
 
-**後端：**
-```bash
-cd neo-backend
-dotnet restore
-```
+#### 第一步：還原與安裝相依套件
 
-**前端：**
-```bash
-cd ../neo-frontend
-npm install
-```
+* **後端**還原：
 
-## 開發流程
+  ```bash
+  cd neo-backend
+  dotnet restore
+  ```
 
-### 後端開發
+* **前端**安裝：
 
-1. **啟動後端服務**
+  ```bash
+  cd neo-frontend
+  npm install
+  ```
 
-   ```bash
-   cd neo-backend
-   dotnet run
-   ```
+#### 第二步：啟動雙端服務
 
-   服務通常會在 https://localhost:7146 或 http://localhost:5058 啟動。
-
-2. **MVC 開發**
-   - 在 `Controllers` 中新增控制器。
-   - 在 `Views` 中新增 Razor 視圖，並引用打包後的資源。
-
-### 前端開發
-
-1. **啟動 Vite 開發伺服器**
+1. **啟動前端 Vite 伺服器** (預設運行於 `http://localhost:3000`)：
 
    ```bash
    cd neo-frontend
    npm start
    ```
 
-   開發伺服器預設於 http://localhost:3000。
+   啟動後，您可以直接透過瀏覽器造訪各前端模組的獨立開發頁面，例如：
+   * Home 模組：[http://localhost:3000/src/home/index.html](http://localhost:3000/src/home/index.html)
+   * Privacy 模組：[http://localhost:3000/src/privacy/index.html](http://localhost:3000/src/privacy/index.html)
 
-2. **模組開發規範**
-   - 每個模組必須包含 `index.ts` 作為入口點。
-   - 使用 Vue 3 單檔案組件 (`.vue`) 進行開發。
-   - 樣式應優先使用 Tailwind CSS 類別。
+2. **啟動後端 .NET 伺服器** (通常運行於 `https://localhost:7146` 或 `http://localhost:5058`)：
 
-3. **新增模組**
-   在 `src` 目錄下創建資料夾：
    ```bash
-   mkdir -p src/new-page
-   touch src/new-page/index.ts src/new-page/App.vue src/new-page/style.css
+   cd neo-backend
+   dotnet run
    ```
 
-## 打包與部署
+---
 
-### 前端自動化打包
+### 🚀 正式佈署流程 (佈署階段 - 簡化至單伺服器)
 
-前端模組會被編譯並直接部署到後端的 `wwwroot`：
+當前端與後端皆修改完畢，準備發布至正式環境時，請依照下列步驟進行「編譯與一體化發布」：
 
-1. **打包特定模組**
-   ```bash
-   npm run build <模組名稱>
-   # 例如: npm run build home
-   ```
+#### 第一步：編譯前端模組並搬運至後端 wwwroot
 
-2. **打包所有模組**
-   ```bash
-   npm run build
-   ```
+您可以根據修改範圍，選擇編譯特定模組或所有模組。打包腳本會自動將產物產出至後端目錄：
 
-3. **打包產出位置**
-   - JS 檔案：`neo-backend/wwwroot/js/{模組名稱}/{模組名稱}.js`
-   - CSS 檔案：`neo-backend/wwwroot/css/{模組名稱}/{模組名稱}.css`
+* **情況 A：僅編譯與搬運單一特定模組**：
 
-### 後端發佈
+  ```bash
+  cd neo-frontend
+  npm run build <模組名稱>  # 例如: npm run build home
+  ```
+
+* **情況 B：編譯與搬運所有模組 (發布前推薦)**：
+
+  ```bash
+  cd neo-frontend
+  npm run build
+  ```
+
+#### 第二步：發布 .NET 專案 (包含前端靜態資源)
+
+前端編譯完成後，即可直接對 .NET 後端專案進行發布，打包後的資料夾將包含完整的全端程式，僅需佈署此產物即可：
 
 ```bash
 cd neo-backend
 dotnet publish -c Release -o ./publish
 ```
 
-## 故障排除
+---
 
-### 常見問題
+## 🛡️ AI Agent 開發防禦網 (Harness)
 
-1. **TypeScript 類型錯誤**
-   - 確保 `tsconfig.json` 中的 `jsx` 設置為 `preserve`。
-   - 檢查是否殘留了 React 的類型引用。
+本解決方案內置了高規格的 AI 輔助開發規則，請協作的 AI 助手務必遵守：
 
-2. **樣式未更新**
-   - 確認 `npm run build` 已正確執行。
-   - 檢查瀏覽器快取或後端 `wwwroot` 檔案是否已覆蓋。
-
-3. **找不到入口文件**
-   - 模組目錄內必須存在 `index.ts`。本專案已移除對 `.tsx` 的支援。
-
-### 建議工具
-
-- **VS Code 擴展**：
-  - **C# Dev Kit**: .NET 開發必備。
-  - **Volar (Vue - Official)**: Vue 3 開發環境。
-  - **Tailwind CSS IntelliSense**: 類別提示。
-
-### 開發最佳實踐
-
-1. **模組解耦**：避免模組間的直接引用，共用邏輯應提取至公用目錄。
-2. **CSS 現代化**：善用 Tailwind 4 的新特性，減少自定義 CSS 量。
-3. **定期更新**：執行 `dotnet restore` 與 `npm install` 保持環境最新。
+* 根目錄下的 **[AGENTS.md](file:///Users/ben/Projects/neo-web/AGENTS.md)** 提供了全專案級的 Agent Rules。
+* 各子目錄中亦有針對性設計的本地 Agent 規則，請務必在工作前詳讀：
+  * [後端 Agent 規範 (neo-backend/AGENTS.md)](file:///Users/ben/Projects/neo-web/neo-backend/AGENTS.md)
+  * [前端 Agent 規範 (neo-frontend/AGENTS.md)](file:///Users/ben/Projects/neo-web/neo-frontend/AGENTS.md)

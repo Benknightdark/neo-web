@@ -5,25 +5,41 @@
   "main": "index.js",
   "scripts": {
     "start": "vite .",
+    "typecheck": "vue-tsc --noEmit",
     "build": "node scripts/build.js",
     "build:dev": "vite build --mode development",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint . --fix",
+    "format": "prettier --write \"src/**/*.{ts,vue,css}\""
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@tailwindcss/postcss": "^4.1.18",
-    "@tailwindcss/vite": "^4.1.18",
-    "autoprefixer": "^10.4.23",
-    "postcss": "^8.5.6",
-    "tailwindcss": "^4.1.18",
-    "vue": "^3.5.26"
+    "@tailwindcss/postcss": "^4.3.0",
+    "@tailwindcss/vite": "^4.3.0",
+    "autoprefixer": "^10.5.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^4.3.0",
+    "vue": "^3.5.34"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.3",
-    "jest": "^30.2.0",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.0"
+    "@eslint/js": "^10.0.1",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vue/test-utils": "^2.4.10",
+    "eslint": "^10.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-vue": "^10.9.1",
+    "happy-dom": "^20.9.0",
+    "jest": "^30.4.2",
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.4",
+    "vite": "^8.0.14",
+    "vitest": "^4.1.7",
+    "vue-tsc": "^3.3.1"
   }
 }
