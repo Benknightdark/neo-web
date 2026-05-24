@@ -110,3 +110,6 @@ Before claiming a task is complete, you **MUST** run type-checking:
 ### 5. Security & Sensitive Configurations Boundary (CRITICAL)
 *   **ABSOLUTELY FORBIDDEN**: You **MUST NOT** read or modify any `.env` files (e.g., `.env`, `.env.local`), `appsettings.json` (including `appsettings.Development.json`), or IDE/VS Code launch configs such as `launch.json` or `.vscode/launch.json`.
 *   These configuration files contain secrets, server URLs, database strings, and startup variables, and are strictly restricted from AI agent access. If you need any credentials, environment parameters, or database connections to fulfill a task, you **MUST** request them directly from the human developer.
+  
+### 6. Git Message
+* All git messages must be in Taiwanese .
