@@ -94,7 +94,7 @@ Neo-Web 是一個採用 **混合式 (Hybrid) 全端架構** 的網頁應用程�
   npm run build <模組名稱>  # 例如: npm run build home
   ```
 
-* **情況 B：編譯與搬運所有模組 (發布前推薦)**：
+* **情況 B：編譯與搬運所有模組 **：
 
   ```bash
   cd neo-frontend
