@@ -11,22 +11,26 @@ const isHovered = ref(false);
       <div class="bg-blue-500 text-white p-4 mb-6 rounded-lg text-center">
         【Vue 3】 如果您能看到這個藍色背景的方塊，說明 Tailwind CSS 已正確加載！
       </div>
-      
+
       <h1 class="main-title text-center mb-6">測試自訂 Tailwind 類</h1>
       <div class="flex justify-center mb-8">
         <button class="custom-btn mr-4">自訂按鈕樣式</button>
-        <button class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors">
+        <button
+          class="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 transition-colors"
+        >
           Tailwind 內建樣式
         </button>
       </div>
-      
-      <header class="text-center mb-12 py-8 bg-gradient-to-r from-blue-400 to-purple-500 text-white rounded-lg shadow-lg">
+
+      <header
+        class="text-center mb-12 py-8 bg-gradient-to-r from-blue-400 to-purple-500 text-white rounded-lg shadow-lg"
+      >
         <h1 class="text-4xl md:text-5xl font-bold mb-2 tracking-wide">歡迎來到我們的網站</h1>
         <p class="text-xl opacity-90">探索更多精彩內容</p>
       </header>
-      
+
       <main class="flex flex-col gap-10">
-        <div 
+        <div
           class="bg-white rounded-lg p-8 shadow-md text-center transition-all duration-300 cursor-pointer"
           :class="{ 'shadow-xl transform -translate-y-2': isHovered }"
           @mouseenter="isHovered = true"
@@ -35,29 +39,43 @@ const isHovered = ref(false);
           <div class="text-5xl mb-4">🚀</div>
           <h2 class="text-2xl font-semibold mb-4 text-gray-800">快速上手</h2>
           <p class="text-gray-600 mb-6">我們提供簡單易用的界面，讓您輕鬆開始使用我們的服務。</p>
-          <button class="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-full transition-all duration-200 hover:shadow-lg transform hover:-translate-y-1 focus:outline-none">
+          <button
+            class="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-full transition-all duration-200 hover:shadow-lg transform hover:-translate-y-1 focus:outline-none"
+          >
             了解更多
           </button>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
-          <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <h3 class="text-xl font-semibold mb-4 text-gray-800 border-b border-blue-200 pb-2">專業服務</h3>
+          <div
+            class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+          >
+            <h3 class="text-xl font-semibold mb-4 text-gray-800 border-b border-blue-200 pb-2">
+              專業服務
+            </h3>
             <p class="text-gray-600">我們的團隊擁有豐富的經驗，能夠為您提供最專業的解決方案。</p>
           </div>
-          
-          <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <h3 class="text-xl font-semibold mb-4 text-gray-800 border-b border-blue-200 pb-2">可靠支持</h3>
+
+          <div
+            class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+          >
+            <h3 class="text-xl font-semibold mb-4 text-gray-800 border-b border-blue-200 pb-2">
+              可靠支持
+            </h3>
             <p class="text-gray-600">我們的客戶服務團隊隨時為您提供幫助和支持。</p>
           </div>
-          
-          <div class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
-            <h3 class="text-xl font-semibold mb-4 text-gray-800 border-b border-blue-200 pb-2">創新設計</h3>
+
+          <div
+            class="bg-white p-6 rounded-lg shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1"
+          >
+            <h3 class="text-xl font-semibold mb-4 text-gray-800 border-b border-blue-200 pb-2">
+              創新設計
+            </h3>
             <p class="text-gray-600">我們不斷創新，為您提供最先進的功能和體驗。</p>
           </div>
         </div>
       </main>
-      
+
       <footer class="mt-16 text-center py-6 border-t border-gray-200 text-gray-500">
         <p>© 2025 Neo Web. 保留所有權利。</p>
       </footer>

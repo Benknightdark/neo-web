@@ -1,0 +1,20 @@
+root = true
+
+[*]
+indent_style = space
+end_of_line = lf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+# C# Files (4 spaces)
+[*.cs]
+indent_size = 4
+
+# Web Files (2 spaces)
+[*.{json,js,ts,vue,css,html,cshtml}]
+indent_size = 2
+
+# Markdown Files
+[*.md]
+trim_trailing_whitespace = false

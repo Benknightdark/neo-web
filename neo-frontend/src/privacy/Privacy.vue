@@ -4,18 +4,24 @@
       <h1>【Vue】隱私政策</h1>
       <p class="subtitle">最後更新：2025年4月14日</p>
     </header>
-    
+
     <div class="privacy-content">
       <div class="intro-card">
-        <p>
-          歡迎訪問我們的隱私政策頁面。我們非常重視您的隱私和個人資訊安全。
-        </p>
+        <p>歡迎訪問我們的隱私政策頁面。我們非常重視您的隱私和個人資訊安全。</p>
       </div>
-      
+
       <section class="policy-section">
         <div class="section-header">
           <div class="icon-container">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <circle cx="12" cy="12" r="10"></circle>
               <line x1="12" y1="16" x2="12" y2="12"></line>
               <line x1="12" y1="8" x2="12.01" y2="8"></line>
@@ -35,11 +41,19 @@
           </ul>
         </div>
       </section>
-      
+
       <section class="policy-section">
         <div class="section-header">
           <div class="icon-container">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
               <path d="M2 17l10 5 10-5"></path>
               <path d="M2 12l10 5 10-5"></path>
@@ -48,12 +62,8 @@
           <h2>我們如何使用您的資訊</h2>
         </div>
         <div class="section-content">
-          <p>
-            我們使用收集的資訊來提供、維護和改進我們的服務，並開發新的服務。
-          </p>
-          <p>
-            我們可能會使用您的資訊來：
-          </p>
+          <p>我們使用收集的資訊來提供、維護和改進我們的服務，並開發新的服務。</p>
+          <p>我們可能會使用您的資訊來：</p>
           <ul>
             <li>提供和改進我們的產品及服務</li>
             <li>與您溝通有關我們的服務和更新</li>
@@ -62,11 +72,19 @@
           </ul>
         </div>
       </section>
-      
+
       <section class="policy-section">
         <div class="section-header">
           <div class="icon-container">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
               <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
@@ -74,9 +92,7 @@
           <h2>資訊安全</h2>
         </div>
         <div class="section-content">
-          <p>
-            我們實施各種安全措施來保護您的個人資訊安全。這些措施包括：
-          </p>
+          <p>我們實施各種安全措施來保護您的個人資訊安全。這些措施包括：</p>
           <ul>
             <li>使用加密技術保護數據傳輸</li>
             <li>定期審查和更新我們的安全實踐</li>
@@ -89,7 +105,15 @@
       <section class="policy-section">
         <div class="section-header">
           <div class="icon-container">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
@@ -97,9 +121,7 @@
           <h2>您的選擇和權利</h2>
         </div>
         <div class="section-content">
-          <p>
-            您有權利：
-          </p>
+          <p>您有權利：</p>
           <ul>
             <li>訪問您的個人資訊</li>
             <li>更正不準確的資訊</li>
@@ -112,14 +134,16 @@
     </div>
 
     <footer class="privacy-footer">
-      <p>如果您對我們的隱私政策有任何疑問，請聯絡我們：<a href="mailto:privacy@neocompany.com">privacy@neocompany.com</a></p>
+      <p>
+        如果您對我們的隱私政策有任何疑問，請聯絡我們：<a href="mailto:privacy@neocompany.com"
+          >privacy@neocompany.com</a
+        >
+      </p>
     </footer>
   </div>
 </template>
 
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
 .privacy-container {
@@ -163,7 +187,9 @@
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   padding: 1.5rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .policy-section:hover {
