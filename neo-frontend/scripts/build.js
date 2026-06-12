@@ -121,25 +121,6 @@ function generateStaticWebAppConfig(deployRootPath) {
   };
   fs.writeFileSync(targetPath, JSON.stringify(configContent, null, 2), 'utf8');
   console.log(`[Config] 已生成 staticwebapp.config.json，配置首頁重定向至 /home/`);
-
-  // 生成一個自動跳轉的 index.html 作為物理 fallback，以防止 SWA CLI 回傳 404
-  const targetHtmlPath = path.join(deployRootPath, 'index.html');
-  const htmlContent = `<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title>Redirecting...</title>
-    <meta http-equiv="refresh" content="0; url=/home/" />
-    <script>
-        window.location.replace("/home/");
-    </script>
-</head>
-<body>
-    <p>正在前往首頁，請稍候...</p>
-</body>
-</html>`;
-  fs.writeFileSync(targetHtmlPath, htmlContent, 'utf8');
-  console.log(`[Redirect] 已為根目錄生成自動跳轉 index.html`);
 }
 
 /**
