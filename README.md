@@ -51,15 +51,24 @@ npm start
 ```
 * 啟動 Vite 開發伺服器於 `http://localhost:3000`。
 
-#### 3. 啟動 SWA CLI 本地代理測試
-若需測試 SWA 靜態託管與反向代理路由：
+### 🔍 地端 DEPLOY 測試方式 (Preview)
+
+測試前端打包後（deploy/ 目錄）的靜態託管與 API 反向代理路由，請依序執行：
+
+#### 1. 啟動後端 API 服務
+```bash
+cd neo-backend
+dotnet run
+```
+
+#### 2. 建置前端並啟動 SWA CLI 代理
 ```bash
 cd neo-frontend
 npm run build
 cd deploy
 npx swa start local-deploy
 ```
-* 本地服務運行於 `http://localhost:4280`。SWA CLI 會將根路徑導向 `/home/`，並將 `/api/*` 轉發至後端 `http://localhost:5058`。
+* 服務運行於 `http://localhost:4280`。SWA CLI 會託管靜態檔案（將根路徑 `/` 重定向至 `/home/`），並將 `/api/*` 請求轉發至本地 API 服務 `http://localhost:5058`。
 
 ---
 
