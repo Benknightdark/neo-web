@@ -1,15 +1,15 @@
-@import '../base-style.css';
-/* Home 模組專用樣式檔案 */
+@import "../base-style.css";
 
-/* 自定義樣式可以添加在這裡 */
-.page-container {
-  @apply min-h-screen bg-slate-50;
+/* 首頁專屬微動畫 */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
-.main-title {
-  @apply text-4xl font-bold text-blue-600;
-}
-
-.custom-btn {
-  @apply bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors;
+.animate-pulse-slow {
+  animation: pulse-slow 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

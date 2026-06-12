@@ -1,7 +1,7 @@
 <template>
   <div class="privacy-container">
     <header class="privacy-header">
-      <h1>【Vue】隱私政策</h1>
+      <h1>隱私政策</h1>
       <p class="subtitle">最後更新：2025年4月14日</p>
     </header>
 

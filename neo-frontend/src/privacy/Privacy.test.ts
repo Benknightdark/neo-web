@@ -7,7 +7,7 @@ describe('Privacy.vue', () => {
     const wrapper = mount(Privacy);
 
     // Check main title and subtitle
-    expect(wrapper.find('h1').text()).toBe('【Vue】隱私政策');
+    expect(wrapper.find('h1').text()).toBe('隱私政策');
     expect(wrapper.find('.subtitle').text()).toContain('最後更新：2025年4月14日');
   });
 

@@ -1,0 +1,26 @@
+services:
+  neo-backend:
+    build:
+      context: ./neo-backend
+      dockerfile: Dockerfile
+    container_name: neo-backend
+    restart: always
+    networks:
+      - neo-network
+
+  neo-frontend:
+    build:
+      context: ./neo-frontend
+      dockerfile: Dockerfile
+    container_name: neo-frontend
+    restart: always
+    ports:
+      - "8080:4280"
+    depends_on:
+      - neo-backend
+    networks:
+      - neo-network
+
+networks:
+  neo-network:
+    driver: bridge

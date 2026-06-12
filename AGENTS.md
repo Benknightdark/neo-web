@@ -1,122 +1,59 @@
-# Gemini Context for Neo-Web
+# Neo-Web AI 開發指引 (AGENTS.md)
 
-This file documents the architecture, development workflow, and conventions for the `neo-web` project. It is intended to guide AI agents in understanding and working with the codebase.
+本文件定義 Neo-Web 專案的架構分工、核心指令與 AI 開發規範。
 
-## Project Overview
+---
 
-`neo-web` is a hybrid full-stack web application combining a **.NET 10.0** backend with a modern frontend built using **Vite 6**, supporting **Vue 3**.
+## 🗺️ 專案架構與運行邏輯
 
-* **Backend**: ASP.NET Core MVC (running on .NET 10.0). Acts as the primary server and host for the frontend assets.
-* **Frontend**: A modular frontend architecture where pages/features are developed as independent modules (using Vue) and bundled into the backend's `wwwroot` directory.
-* **Styling**: Tailwind CSS is used for styling.
+本專案採用前後端分離設計：
 
-## Directory Structure
-
-```text
-neo-web/
-├── neo-web.sln                 # .NET Solution file
-├── neo-backend/                # ASP.NET Core Backend
-│   ├── Controllers/            # MVC Controllers
-│   ├── Views/                  # Razor Views (serve the HTML shell)
-│   ├── wwwroot/                # Static assets (compiled frontend code goes here)
-│   │   ├── css/
-│   │   └── js/
-│   ├── Program.cs              # App entry point
-│   └── neo-backend.csproj      # Project file (Targets .NET 10.0)
-└── neo-frontend/               # Frontend Source
-    ├── src/                    # Source modules
-    │   ├── home/               # 'home' module (Vue implementation observed)
-    │   └── privacy/            # 'privacy' module
-    ├── scripts/                # Custom build scripts
-    │   └── build.js            # Main build script for bundling modules
-    ├── package.json            # Node dependencies and scripts
-    └── vite.config.ts          # Base Vite configuration
+```
+/ (專案根目錄)
+├── neo-backend/         # .NET 10.0 Web API 後端 (C#) -> [neo-backend/AGENTS.md](file:///Users/ben/Projects/neo-web/neo-backend/AGENTS.md)
+├── neo-frontend/        # Vue 3 (Vite 8 + TS 6 + Tailwind 4) 前端 -> [neo-frontend/AGENTS.md](file:///Users/ben/Projects/neo-web/neo-frontend/AGENTS.md)
+├── docs/                # 架構圖與說明文件
+├── docker-compose.yml   # 容器化部署配置
+└── neo-web.sln          # .NET 解決方案檔
 ```
 
-## Development Workflow
+* **連線路由**：
+  * 前端編譯輸出至 `neo-frontend/deploy`。
+  * 使用 **Azure Static Web Apps (SWA) CLI** 進行託管，根路徑 `/` 重定向至 `/home/`。
+  * SWA CLI 反向代理 `/api/*` 請求至後端 API (預設 `http://localhost:5058`)。
 
-### Prerequisites
+---
 
-* **.NET SDK**: 10.0 or higher.
-* **Node.js**: v20.0.0 or higher.
+## 🛠️ 全域核心指令
 
-### Backend
-
-The backend is a standard ASP.NET Core MVC application.
-
-* **Run**: `dotnet run` (inside `neo-backend/`)
-* **URL**: Typically `https://localhost:7146` or `http://localhost:5058` (check launch logs).
-
-### Frontend
-
-The frontend uses a custom build process to integrate with the backend.
-
-* **Install Dependencies**: `npm install` (inside `neo-frontend/`)
-* **Start Dev Server**: `npm start` (Runs `vite .`). This starts a Vite dev server, typically at `http://localhost:5173`.
-  * *Note*: During development, you may access the frontend directly via Vite or through the backend if properly configured to proxy/load assets.
-* **Build Modules**:
-  * Build all modules: `npm run build`
-  * This script (`scripts/build.js`) bundles the modules and copies the output artifacts (JS/CSS) into `neo-backend/wwwroot/`.
-
-### Architecture & Conventions
-
-* **Hybrid Routing**: The backend handles routing (MVC Controllers). The frontend modules are "islands" or specific pages injected into the Razor views.
-* **Module Independence**: Each folder in `neo-frontend/src/` (e.g., `home`, `privacy`) represents a distinct module. It should have its own entry point (`index.ts`).
-* **Framework**: The build system is configured for **Vue 3**.
-* **Styling**: Tailwind CSS is configured. Ensure `@tailwindcss/vite` plugin is active in the build.
-
-## Key Files
-
-* `neo-backend/Program.cs`: Configures the HTTP pipeline and services.
-* `neo-frontend/package.json`: Defines build scripts and dependencies.
-* `neo-frontend/scripts/build.js`: **CRITICAL**. This script handles the logic of building specific modules and moving them to the backend. Modify this if changing the build/deployment strategy.
-* `neo-frontend/vite.config.ts`: Vite configuration.
-
-## Common Tasks
-
-* **Adding a new page**:
-  1. Create a new folder in `neo-frontend/src/<module_name>`.
-  2. Add your Vue code and an entry point (`index.ts`).
-  3. Create a corresponding Controller/View in `neo-backend`.
-  4. Run `npm run build` to compile the assets to the backend.
-  5. Reference the compiled JS/CSS in the backend View.
-
-## Critical AI Agent Rules & Constraints (Agent Harness)
-
-### 1. Front-End Type Verification (Feedback Sensor)
-
-Before claiming a task is complete, you **MUST** run type-checking:
-
-* Run `npm run typecheck` inside `neo-frontend/` to verify TypeScript and Vue SFC types. Do not rely solely on `npm run build` since Vite does not block on type errors.
-
-### 2. Tailwind CSS 4 Styling Conventions
-
-* **DO NOT** edit `tailwind.config.js` or `postcss.config.js` to modify the theme or add utilities. Tailwind 4 is configured in this project.
-* Custom colors, fonts, or themes must be configured using standard CSS `@theme` directives inside `neo-frontend/src/base-style.css` or the module's `style.css`.
-  Example:
-  ```css
-  @theme {
-    --color-primary: #1e40af;
-  }
+* **容器化啟動（後端 + 前端 + SWA 代理）**：
+  ```bash
+  docker-compose up --build -d
+  ```
+  啟動後造訪 `http://localhost:8080` 瀏覽完整系統。
+* **停止容器**：
+  ```bash
+  docker-compose down
   ```
 
-### 3. External Dependencies & Vue ESM Boundaries
+---
 
-* **DO NOT** bundle the core `vue` package into your frontend modules.
-* The build template `scripts/vite-module-template.js` enforces `external: ['vue']` to ensure all modules share a single Vue instance at runtime.
-* If you use other third-party libraries, they should be mapped via the custom C# Tag Helper `<import-map>` in `neo-backend/Views/Shared/_Layout.cshtml`.
-* Local/versioned ESM files (mapped via `/lib/...`) are automatically version-stamped (for cache-busting) by the C# `ImportMapTagHelper`.
+## 🎯 開發規範與限制
 
-### 4. Hybrid Routing & Razor HTML Shells
+### 1. 修改後必體驗證
+所有代碼修改後必須在對應目錄通過驗證：
+* **後端驗證**：`cd neo-backend && dotnet build` (編譯無錯誤、無警告)
+* **前端驗證**：`cd neo-frontend && npm run typecheck && npm run test`
 
-* All frontend modules act as independent Vue islands mounted on `<div id="root"></div>` inside their respective ASP.NET Core Razor Views (e.g., `Views/Home/Index.cshtml`).
-* Ensure any links between modules use server-side routing (e.g., `<a href="/Home/Privacy">` or Tag Helpers) rather than frontend router links, unless it is a sub-page within the *same* module.
+### 2. 禁止預留佔位符 (No Placeholders)
+* 嚴禁寫入 `TODO: 稍後實現` 或 `Lorem Ipsum` 等假資料。
+* 需要 UI 資產時使用 `generate_image` 生成真實圖片。
+* UI 需採用現代設計（漸層色、暗黑模式、微動畫、hover 狀態），禁用瀏覽器預設樣式。
 
-### 5. Security & Sensitive Configurations Boundary (CRITICAL)
+### 3. 保留文件完整性
+* 修改時保留所有無關的既有註解、文件說明與測試。
+* 測試失敗時優先排查修正，禁止直接刪除或跳過 (Skip) 測試。
 
-* **ABSOLUTELY FORBIDDEN**: You **MUST NOT** read or modify any `.env` files (e.g., `.env`, `.env.local`), `appsettings.json` (including `appsettings.Development.json`), or IDE/VS Code launch configs such as `launch.json` or `.vscode/launch.json`.
-* These configuration files contain secrets, server URLs, database strings, and startup variables, and are strictly restricted from AI agent access. If you need any credentials, environment parameters, or database connections to fulfill a task, you **MUST** request them directly from the human developer.
-
-### 6. Git Message
-
-* All git messages must be in Taiwanese .
+### 4. 憑證與環境變數安全
+* 嚴禁將 API 金鑰、密碼或敏感環境變數寫死在程式碼中。
+* 一律使用 `appsettings.json` 或 `.env` 管理，並加入 `.gitignore`。
