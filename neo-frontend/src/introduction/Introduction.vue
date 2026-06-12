@@ -9,7 +9,7 @@ const isHovered = ref(false);
     <div class="max-w-6xl mx-auto p-6 md:p-8">
       <!-- 添加一個測試元素，使用自訂類 -->
       <div class="bg-blue-500 text-white p-4 mb-6 rounded-lg text-center">
-        【Vue 3】 如果您能看到這個藍色背景的方塊，說明 Tailwind CSS 已正確加載！
+        如果您能看到這個藍色背景的方塊，說明 Tailwind CSS 已正確加載！
       </div>
 
       <h1 class="main-title text-center mb-6">測試自訂 Tailwind 類</h1>
