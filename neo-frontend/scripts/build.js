@@ -177,6 +177,7 @@ function processBuiltFiles(tempDistPath, moduleName, deployRootPath) {
     }
     
     if (jsFound) {
+      const timestamp = Date.now();
       const htmlContent = `<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
@@ -190,11 +191,11 @@ function processBuiltFiles(tempDistPath, moduleName, deployRootPath) {
         }
     }
     </script>
-    ${cssFound ? `<link rel="stylesheet" href="./${moduleName}.css" />` : ''}
+    ${cssFound ? `<link rel="stylesheet" href="./${moduleName}.css?v=${timestamp}" />` : ''}
 </head>
 <body class="bg-slate-50 text-slate-800 dark:bg-slate-900 dark:text-slate-100">
     <div id="root"></div>
-    <script type="module" src="./${moduleName}.js"></script>
+    <script type="module" src="./${moduleName}.js?v=${timestamp}"></script>
 </body>
 </html>`;
       fs.writeFileSync(path.join(targetDir, 'index.html'), htmlContent, 'utf8');
