@@ -32,7 +32,7 @@ graph TD
 
 ## 🛠️ 開發與部署流程
 
-### 💻 本地開發 (Local Development)
+### 💻 開發方式 (Development)
 
 請依序啟動雙端服務：
 
@@ -43,36 +43,65 @@ dotnet run
 ```
 * 後端預設監聽 `http://localhost:5058`。已設定 CORS 允許本地連線。
 
-#### 2. 編譯前端模組
+#### 2. 啟動前端開發伺服器
+```bash
+cd neo-frontend
+npm install
+npm start
+```
+* 啟動 Vite 開發伺服器於 `http://localhost:3000`。
+
+#### 3. 啟動 SWA CLI 本地代理測試
+若需測試 SWA 靜態託管與反向代理路由：
 ```bash
 cd neo-frontend
 npm run build
-```
-* 打包前端模組至 `neo-frontend/deploy`。
-
-#### 3. 啟動 SWA CLI 代理
-```bash
-cd neo-frontend/deploy
+cd deploy
 npx swa start local-deploy
 ```
 * 本地服務運行於 `http://localhost:4280`。SWA CLI 會將根路徑導向 `/home/`，並將 `/api/*` 轉發至後端 `http://localhost:5058`。
 
 ---
 
-### 🚀 生產環境部署 (Docker Compose)
+### 📦 一般部署方式 (General Deployment)
 
-專案已容器化，可使用 Docker Compose 建置與啟動：
+不使用容器時的傳統建置與發布步驟：
 
+#### 1. 建置前端靜態資源
+```bash
+cd neo-frontend
+npm install
+npm run build
+```
+* 編譯後的靜態檔案將輸出至 `neo-frontend/deploy`。
+
+#### 2. 發布後端 .NET API
+```bash
+cd neo-backend
+dotnet publish -c Release -o ./publish
+```
+* 編譯後端為 Release 版本並輸出至 `./publish`。
+
+#### 3. 執行與託管
+將 `deploy` 中的靜態檔案置於網頁伺服器（或 Azure SWA），並執行發布的 .NET 程式，將 API 反向代理導向 .NET 服務。
+
+---
+
+### 🚀 容器部署方式 (Container Deployment)
+
+使用 Docker Compose 進行建置與啟動：
+
+#### 1. 啟動所有服務容器
 ```bash
 docker-compose up --build -d
 ```
+* 建置並啟動 `neo-backend` 與 `neo-frontend` 容器。
+* 前端容器的 `4280` 埠對應至主機的 `8080` 埠。造訪 `http://localhost:8080` 即可瀏覽完整應用程式。
 
-#### 容器運作機制：
-1. **後端服務 (`neo-backend`)**：由 .NET 10.0 Dockerfile 編譯，運行於 `http://+:5000`。
-2. **前端服務 (`neo-frontend`)**：使用 Node.js 20 進行多階段建置。第一階段於容器內執行 `npm run build`，第二階段執行 SWA CLI：
-   `swa start container-deploy`
-   * 讀取 `deploy/swa-cli.config.json` 的設定，將 API 請求轉發至 `http://neo-backend:5000`。
-3. **對外埠口**：前端容器的 `4280` 埠對應至主機的 `8080` 埠。造訪 `http://localhost:8080` 即可瀏覽應用程式。
+#### 2. 停止並移除容器
+```bash
+docker-compose down
+```
 
 ---
 
