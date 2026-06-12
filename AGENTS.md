@@ -1,112 +1,59 @@
-# Gemini Context for Neo-Web
+# Neo-Web AI 開發指引 (AGENTS.md)
 
-This file defines the architecture, development workflow, and conventions for the `neo-web` project to guide AI agents.
+本文件定義 Neo-Web 專案的架構分工、核心指令與 AI 開發規範。
 
-## Project Overview
+---
 
-`neo-web` is a decoupled full-stack application. It pairs a **.NET 10.0 Web API** backend with a **Vite 6 / Vue 3** frontend, hosted locally and in production via the **Azure Static Web Apps (SWA) CLI** within Docker Compose.
+## 🗺️ 專案架構與運行邏輯
 
-* **Backend**: ASP.NET Core Web API (.NET 10.0) serving JSON endpoints.
-* **Frontend**: Independent Vue modules bundled into `neo-frontend/deploy`.
-* **Hosting & Proxy**: Azure Static Web Apps (SWA) CLI hosts static assets and proxies `/api` to the backend.
-* **Styling**: Tailwind CSS.
+本專案採用前後端分離設計：
 
-## Directory Structure
-
-```text
-neo-web/
-├── neo-web.sln                 # .NET Solution file
-├── docker-compose.yml          # Production orchestration
-├── neo-backend/                # ASP.NET Core Backend (Pure API)
-│   ├── Controllers/            # API Controllers
-│   ├── Program.cs              # API entry point & CORS configuration
-│   ├── Dockerfile              # Backend build recipe
-│   └── neo-backend.csproj      # Targets .NET 10.0
-└── neo-frontend/               # Frontend Source
-    ├── src/                    # Source modules
-    │   ├── home/               # 'home' module (Vue entry / portal)
-    │   ├── introduction/       # 'introduction' module
-    │   └── privacy/            # 'privacy' module
-    ├── deploy/                 # Compiled static assets (production output target)
-    │   ├── staticwebapp.config.json # SWA routing rules (e.g. '/' redirect to '/home/')
-    │   └── swa-cli.config.json # SWA CLI local emulator settings (local-deploy/container-deploy)
-    ├── scripts/                # Custom build scripts
-    │   └── build.js            # Build script outputting modules to deploy/
-    ├── package.json            # Node dependencies and scripts
-    ├── Dockerfile              # Frontend multi-stage build & SWA CLI runner
-    └── vite.config.ts          # Base Vite configuration
+```
+/ (專案根目錄)
+├── neo-backend/         # .NET 10.0 Web API 後端 (C#) -> [neo-backend/AGENTS.md](file:///Users/ben/Projects/neo-web/neo-backend/AGENTS.md)
+├── neo-frontend/        # Vue 3 (Vite 8 + TS 6 + Tailwind 4) 前端 -> [neo-frontend/AGENTS.md](file:///Users/ben/Projects/neo-web/neo-frontend/AGENTS.md)
+├── docs/                # 架構圖與說明文件
+├── docker-compose.yml   # 容器化部署配置
+└── neo-web.sln          # .NET 解決方案檔
 ```
 
-## Development Workflow
+* **連線路由**：
+  * 前端編譯輸出至 `neo-frontend/deploy`。
+  * 使用 **Azure Static Web Apps (SWA) CLI** 進行託管，根路徑 `/` 重定向至 `/home/`。
+  * SWA CLI 反向代理 `/api/*` 請求至後端 API (預設 `http://localhost:5058`)。
 
-### Prerequisites
+---
 
-* **.NET SDK**: 10.0 or higher.
-* **Node.js**: v20.0.0 or higher.
+## 🛠️ 全域核心指令
 
-### Local Development
+* **容器化啟動（後端 + 前端 + SWA 代理）**：
+  ```bash
+  docker-compose up --build -d
+  ```
+  啟動後造訪 `http://localhost:8080` 瀏覽完整系統。
+* **停止容器**：
+  ```bash
+  docker-compose down
+  ```
 
-1. **Backend**: Start the API:
-   ```bash
-   cd neo-backend
-   dotnet run
-   ```
-   * Runs at `http://localhost:5058`. CORS allows requests from frontend dev servers.
-2. **Frontend**: Build modules:
-   ```bash
-   cd neo-frontend
-   npm run build
-   ```
-   * Run the SWA emulator to serve static files and proxy API requests:
-   ```bash
-   cd neo-frontend/deploy
-   npx swa start local-deploy
-   ```
-   * Open `http://localhost:4280/` to test.
+---
 
-### Production Deployment (Docker Compose)
+## 🎯 開發規範與限制
 
-Run the containerized stack:
-```bash
-docker-compose up --build -d
-```
-* **Frontend**: A multi-stage Dockerfile builds the static files and starts the SWA CLI on port `4280` (mapped to host port `8080`).
-* **API Proxy**: SWA proxies `/api/*` to `http://neo-backend:5000` inside the Docker network.
+### 1. 修改後必體驗證
+所有代碼修改後必須在對應目錄通過驗證：
+* **後端驗證**：`cd neo-backend && dotnet build` (編譯無錯誤、無警告)
+* **前端驗證**：`cd neo-frontend && npm run typecheck && npm run test`
 
-## Key Files
+### 2. 禁止預留佔位符 (No Placeholders)
+* 嚴禁寫入 `TODO: 稍後實現` 或 `Lorem Ipsum` 等假資料。
+* 需要 UI 資產時使用 `generate_image` 生成真實圖片。
+* UI 需採用現代設計（漸層色、暗黑模式、微動畫、hover 狀態），禁用瀏覽器預設樣式。
 
-* `AGENTS.md`: Global developer/agent guidelines and workflow rules (this file).
-* `neo-backend/AGENTS.md`: Backend developer/agent conventions for C# Controllers, Razor Views, and Tag Helpers.
-* `neo-frontend/AGENTS.md`: Frontend developer/agent conventions for Vite 8, Vue 3.5, and Tailwind 4.
-* `docker-compose.yml`: Service orchestration.
-* `neo-backend/Program.cs`: API entry point and CORS setup.
-* `neo-frontend/Dockerfile`: Frontend build and SWA run stages.
-* `neo-frontend/deploy/swa-cli.config.json`: **CRITICAL**. SWA CLI configurations. Do not delete.
-* `neo-frontend/deploy/staticwebapp.config.json`: **CRITICAL**. Route redirection rules.
-* `neo-frontend/scripts/build.js`: Frontend compiler and bundle exporter.
+### 3. 保留文件完整性
+* 修改時保留所有無關的既有註解、文件說明與測試。
+* 測試失敗時優先排查修正，禁止直接刪除或跳過 (Skip) 測試。
 
-## Critical AI Agent Rules & Constraints (Agent Harness)
-
-### 1. Frontend Type Checking
-* Run `npm run typecheck` inside `neo-frontend/` to verify TypeScript and Vue SFC types before completing tasks.
-
-### 2. Tailwind CSS 4 Styling
-* **DO NOT** modify `tailwind.config.js` or `postcss.config.js`.
-* Define custom colors, fonts, or themes via `@theme` directives inside `neo-frontend/src/base-style.css` or the module's `style.css`.
-
-### 3. Vue Dependency Isolation
-* **DO NOT** bundle `vue` into frontend modules.
-* The build template (`scripts/vite-module-template.js`) marks `vue` as external to share one runtime instance.
-* The Vue shared library `vue.esm-browser.min.js` is loaded from `deploy/lib/vue3/`.
-
-### 4. Routing & Links
-* The frontend operates independently from the backend.
-* `staticwebapp.config.json` redirects `/` to `/home/`.
-* Use root-relative paths (e.g. `/privacy/`, `/introduction/`) for inter-module links.
-
-### 5. Security Boundaries (CRITICAL)
-* **ABSOLUTELY FORBIDDEN**: Do not read or modify `.env` files, `appsettings*.json`, or IDE configuration files (`launch.json`, `.vscode/*`).
-* Request environment credentials directly from the user.
-
-### 6. Git Commit Language
-* All git messages must be in Taiwanese .
+### 4. 憑證與環境變數安全
+* 嚴禁將 API 金鑰、密碼或敏感環境變數寫死在程式碼中。
+* 一律使用 `appsettings.json` 或 `.env` 管理，並加入 `.gitignore`。

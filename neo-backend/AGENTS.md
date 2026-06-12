@@ -1,46 +1,69 @@
-# C# Backend Rules & Constraints (neo-backend)
+# Neo-Backend 開發指引 (neo-backend/AGENTS.md)
 
-This file defines the C# MVC backend rules and conventions for AI agents.
+定義 neo-backend (.NET 10.0 Web API) 目錄的開發指令與 C# 程式碼規範。
 
-## Backend Context & Architecture
+---
 
-* **Technology Stack**: .NET 10.0, ASP.NET Core MVC.
-* **Routing**: Managed by C# MVC Controllers (e.g., `Controllers/HomeController.cs`).
-* **Views**: Razor Views (`Views/**/*.cshtml`) serve as the HTML Shell, embedding the mounted frontend islands.
-* **Static Files**: Compiled assets (JS/CSS) reside inside `wwwroot/js` and `wwwroot/css`.
+## 🗺️ 目錄結構
 
-## Coding Conventions
+```
+neo-backend/
+├── Controllers/         # API 控制器 (如 HealthController.cs)
+├── Models/              # 資料模型與 DTO (目前為空)
+├── Properties/          # 運行屬性 (launchSettings.json)
+├── Program.cs           # 服務配置與進入點
+└── neo-backend.csproj   # C# 專案檔
+```
 
-### 1. Import Maps & ESM Libraries
-* Define external and shared packages as ES modules (ESM) in `Views/Shared/_Layout.cshtml`.
-* Use the custom C# Tag Helper `<import-map>`:
-  ```html
-  <import-map>
-  {
-      "imports": {
-          "vue": "/lib/vue3/vue.esm-browser.min.js"
-      }
-  }
-  </import-map>
+---
+
+## 🛠️ 開發驗證指令
+
+* **還原依賴與編譯**：
+  ```bash
+  dotnet build
   ```
-* The C# Tag Helper `ImportMapTagHelper.cs` (in `TagHelpers/`) parses this JSON and automatically appends version hashes (`?v=...`) to local absolute paths for cache-busting.
-
-### 2. Controller & Razor Views
-* Mount frontend modules on `<div id="root"></div>` inside their respective Razor Views.
-* Append asset versions when referencing them:
-  ```html
-  @section Styles {
-      <link rel="stylesheet" href="~/css/home/home.css" asp-append-version="true" />
-  }
-  @section Scripts {
-      <script type="module" src="~/js/home/home.js" asp-append-version="true"></script>
-  }
+  *修改代碼後，編譯結果必須為 0 錯誤、0 警告。*
+* **本地啟動**：
+  ```bash
+  dotnet run
+  ```
+  API 預設監聽：`http://localhost:5058`
+* **安裝 NuGet 套件**：
+  ```bash
+  dotnet add package <PackageName>
+  ```
+* **發布 Release 編譯**：
+  ```bash
+  dotnet publish -c Release -o ./publish
   ```
 
-### 3. Verification Commands
-* Run `dotnet build` from the solution root or `neo-backend/` folder to verify compilation.
-* Run `dotnet run` (under `neo-backend/`) to start the server.
+---
 
-### 4. Security Boundaries (CRITICAL)
-* **ABSOLUTELY FORBIDDEN**: Do not read or modify `.env` files, `appsettings*.json`, or IDE configuration files (`launch.json`, `.vscode/*`).
-* Request environment credentials directly from the user.
+## 🎯 C# 程式碼與架構規範
+
+### 1. 現代 C# 語法
+* **File-Scoped Namespaces**：一律使用單行命名空間定義，減少巢狀縮排：
+  ```csharp
+  namespace neo_backend.Controllers;
+  ```
+* **Nullable Reference Types (NRT)**：專案已啟用 NRT，必須處理 `?` 可空標記，避免編譯器產生 Nullability 警告。
+* **Top-Level Statements**：維持 `Program.cs` 採用的頂層語句結構。
+
+### 2. 控制器 (Controllers) 設計
+* 必須繼承 `ControllerBase` 並標記 `[ApiController]`：
+  ```csharp
+  [ApiController]
+  [Route("api/[controller]")]
+  ```
+* 路由使用小寫 RESTful 風格。
+* 回傳值使用 `IActionResult` 或 `ActionResult<T>`，並回傳明確 HTTP 狀態碼 (如 `Ok()`, `NotFound()`, `BadRequest()`)。
+
+### 3. 異步與中斷 (Async/Await)
+* 所有 I/O 操作必須使用 `async` / `await`。
+* 異步方法以 `Async` 結尾。
+* 關鍵非同步操作需串接 `CancellationToken` 以支援請求取消。
+
+### 4. 日誌與錯誤處理
+* 使用 `ILogger<T>` 記錄執行軌跡與異常。
+* 嚴禁吞掉 Exception，應妥善寫入 Log 或向外拋出至全域異常處理。
