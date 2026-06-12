@@ -75,6 +75,9 @@ docker-compose up --build -d
 
 ## Key Files
 
+* `AGENTS.md`: Global developer/agent guidelines and workflow rules (this file).
+* `neo-backend/AGENTS.md`: Backend developer/agent conventions for C# Controllers, Razor Views, and Tag Helpers.
+* `neo-frontend/AGENTS.md`: Frontend developer/agent conventions for Vite 8, Vue 3.5, and Tailwind 4.
 * `docker-compose.yml`: Service orchestration.
 * `neo-backend/Program.cs`: API entry point and CORS setup.
 * `neo-frontend/Dockerfile`: Frontend build and SWA run stages.

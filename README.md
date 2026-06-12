@@ -106,5 +106,7 @@ docker-compose down
 ---
 
 ## 🛡️ AI Agent 開發規範 (Harness)
-協作 AI 助手務必遵守開發規範：
-* 根目錄的 **[AGENTS.md](file:///Users/ben/Projects/neo-web/AGENTS.md)** 包含專案全域的 Agent 規則。
+協作 AI 助手開發時務必遵守各目錄之規範：
+* 根目錄 **[AGENTS.md](file:///Users/ben/Projects/neo-web/AGENTS.md)**：全域架構、開發工作流程與通訊規範。
+* 後端目錄 **[neo-backend/AGENTS.md](file:///Users/ben/Projects/neo-web/neo-backend/AGENTS.md)**：C# 控制器、Razor 視圖及 Tag Helper 之實作約束。
+* 前端目錄 **[neo-frontend/AGENTS.md](file:///Users/ben/Projects/neo-web/neo-frontend/AGENTS.md)**：Vue 模組化組件、樣式擴充與型別測試規範。
