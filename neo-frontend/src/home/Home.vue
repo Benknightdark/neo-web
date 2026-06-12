@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 
 const apiStatus = ref('waiting'); // waiting, loading, success, error
 const apiResponse = ref<any>(null);
@@ -27,6 +27,10 @@ const testApiConnection = async () => {
     errorMessage.value = err.message || '連線失敗，請檢查 API 是否已啟動';
   }
 };
+
+onMounted(() => {
+  testApiConnection();
+});
 </script>
 
 <template>
