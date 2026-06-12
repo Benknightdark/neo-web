@@ -34,7 +34,7 @@ watch(() => props.title, () => {
         <div class="flex items-center justify-between h-16">
           <!-- Logo & Desktop Navigation -->
           <div class="flex items-center space-x-10">
-            <a href="/" class="flex items-center space-x-2 group">
+            <a href="/home/" class="flex items-center space-x-2 group">
               <span class="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-indigo-200 group-hover:scale-105 transition-transform duration-300">
                 N
               </span>
@@ -44,10 +44,13 @@ watch(() => props.title, () => {
             </a>
             
             <nav class="hidden md:flex space-x-6">
-              <a href="/" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:-translate-y-0.5 transition-all duration-200">
+              <a href="/home/" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:-translate-y-0.5 transition-all duration-200">
                 首頁 (Home)
               </a>
-              <a href="/Home/Privacy" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:-translate-y-0.5 transition-all duration-200">
+              <a href="/introduction/" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:-translate-y-0.5 transition-all duration-200">
+                介紹 (Introduction)
+              </a>
+              <a href="/privacy/" class="text-sm font-semibold text-slate-600 hover:text-indigo-600 hover:-translate-y-0.5 transition-all duration-200">
                 隱私政策 (Privacy)
               </a>
             </nav>
@@ -110,10 +113,13 @@ watch(() => props.title, () => {
       >
         <div v-show="isMobileMenuOpen" class="md:hidden bg-white border-b border-slate-200" id="mobile-menu">
           <div class="px-2 pt-2 pb-4 space-y-1">
-            <a href="/" class="block px-3 py-2 rounded-md text-base font-semibold text-slate-700 hover:text-indigo-600 hover:bg-slate-50 transition-colors">
+            <a href="/home/" class="block px-3 py-2 rounded-md text-base font-semibold text-slate-700 hover:text-indigo-600 hover:bg-slate-50 transition-colors">
               首頁 (Home)
             </a>
-            <a href="/Home/Privacy" class="block px-3 py-2 rounded-md text-base font-semibold text-slate-700 hover:text-indigo-600 hover:bg-slate-50 transition-colors">
+            <a href="/introduction/" class="block px-3 py-2 rounded-md text-base font-semibold text-slate-700 hover:text-indigo-600 hover:bg-slate-50 transition-colors">
+              介紹 (Introduction)
+            </a>
+            <a href="/privacy/" class="block px-3 py-2 rounded-md text-base font-semibold text-slate-700 hover:text-indigo-600 hover:bg-slate-50 transition-colors">
               隱私政策 (Privacy)
             </a>
             <div class="border-t border-slate-100 mt-2 pt-2 px-3">
@@ -142,7 +148,7 @@ watch(() => props.title, () => {
             <span>&copy; 2025 - All Rights Reserved.</span>
           </div>
           <div class="flex space-x-6">
-            <a href="/Home/Privacy" class="hover:text-indigo-600 hover:underline transition-all duration-200">
+            <a href="/privacy/" class="hover:text-indigo-600 hover:underline transition-all duration-200">
               隱私政策 (Privacy)
             </a>
           </div>
