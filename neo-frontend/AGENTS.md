@@ -20,6 +20,9 @@ npm run typecheck        # TypeScript 型別檢查（修改後必須通過）
 npm run test             # 單元測試（修改後必須全數通過）
 npm run lint             # ESLint 校驗與自動修復
 npm run format           # Prettier 格式化
+
+# 測試 SWA 代理路由 (須先 npm run build)
+cd deploy && npx @azure/static-web-apps-cli start local-deploy
 ```
 
 ## 開發規範

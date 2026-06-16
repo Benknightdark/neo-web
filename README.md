@@ -42,7 +42,7 @@ npm run build home,privacy   # 建置多個模組（逗號分隔）
 
 ```bash
 cd neo-frontend && npm run build
-cd deploy && npx swa start local-deploy   # http://localhost:4280
+cd deploy && npx @azure/static-web-apps-cli start local-deploy   # http://localhost:4280
 ```
 
 ## 部署
