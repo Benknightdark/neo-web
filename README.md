@@ -1,115 +1,67 @@
-# Neo-Web 前後端分離專案說明 (Root)
+# Neo-Web
 
-Neo-Web 是採用前後端分離架構的網頁應用程式。本專案整合 **.NET 10.0 Web API** 後端與 **Vue 3 (Vite 8 + TS 6 + Tailwind 4)** 前端，並透過 **Azure Static Web Apps (SWA) CLI** 進行靜態託管與 API 反向代理。
+前後端分離網頁應用程式 — **.NET 10.0 Web API** + **Vue 3 (Vite 8 / TS 6 / Tailwind 4)**，以 **SWA CLI** 託管靜態資源並反向代理 API。
 
----
+## 專案結構
 
-## 🗺️ 專案總覽
+| 目錄 | 說明 |
+|------|------|
+| [neo-backend/](neo-backend/) | ASP.NET Core 10.0 Web API |
+| [neo-frontend/](neo-frontend/) | Vue 3 前端模組 |
 
-解決方案包含以下兩個專案目錄，皆附有獨立說明文件：
+前端編譯產出至 `neo-frontend/deploy`，SWA CLI 託管靜態檔並將 `/api/*` 反向代理至後端（預設 `localhost:5058`），根路徑 `/` 重定向至 `/home/`。
 
-* 📂 **[neo-backend/](file:///Users/ben/Projects/neo-web/neo-backend)**: ASP.NET Core 10.0 Web API 後端服務。
-  👉 *開發指引：[後端開發文件 (neo-backend/README.md)](file:///Users/ben/Projects/neo-web/neo-backend/README.md)*
-* 📂 **[neo-frontend/](file:///Users/ben/Projects/neo-web/neo-frontend)**: Vite 8 + Vue 3.5 + TS 6 前端獨立模組。
-  👉 *開發指引：[前端開發文件 (neo-frontend/README.md)](file:///Users/ben/Projects/neo-web/neo-frontend/README.md)*
+## 本地開發
 
----
-
-## 🏗️ 架構設計
-
-本專案為前後端分離設計。前端模組編譯後輸出至 `neo-frontend/deploy`，由 SWA CLI 託管靜態檔案並轉發 `/api` 請求至後端。
-
-```mermaid
-graph TD
-    User([使用者瀏覽器]) -->|訪問 Port 8080| SWA[SWA CLI 容器 Port 4280]
-    SWA -->|重定向 / 到 /home/| SWA
-    SWA -->|服務靜態資源| StaticFiles[deploy/ 靜態網頁與模組]
-    SWA -->|反向代理 /api/*| DotNetAPI[neo-backend API 容器]
-    DotNetAPI -->|回傳 JSON 資料| SWA
-```
-
----
-
-## 🛠️ 開發與部署流程
-
-### 💻 開發方式 (Development)
-
-請依序啟動雙端服務：
-
-#### 1. 啟動後端 .NET API
 ```bash
-cd neo-backend
-dotnet run
-```
-* 後端預設監聽 `http://localhost:5058`。已設定 CORS 允許本地連線。
+# 1. 後端 (http://localhost:5058，已設定 CORS)
+cd neo-backend && dotnet run
 
-#### 2. 啟動前端開發伺服器
+# 2. 前端 (http://localhost:3000)
+cd neo-frontend && npm install && npm start
+```
+
+本地開發時透過 `http://localhost:3000/src/<模組名稱>/index.html` 存取各模組，例如：
+- `http://localhost:3000/src/home/index.html`
+- `http://localhost:3000/src/introduction/index.html`
+- `http://localhost:3000/src/privacy/index.html`
+
+### 前端模組建置
+
 ```bash
 cd neo-frontend
-npm install
-npm start
+
+npm run build               # 建置所有模組
+npm run build home           # 建置指定模組 (例如：home)
+npm run build home,privacy   # 建置多個模組（逗號分隔）
 ```
-* 啟動 Vite 開發伺服器於 `http://localhost:3000`。
 
-### 🔍 地端 DEPLOY 測試方式 (Preview)
+產出至 `neo-frontend/deploy/<模組名稱>/`。目前可用模組：`home`、`introduction`、`privacy`。
 
-測試前端打包後（deploy/ 目錄）的靜態託管與 API 反向代理路由，請依序執行：
+如需測試 SWA 代理路由：
 
-#### 1. 啟動後端 API 服務
 ```bash
-cd neo-backend
-dotnet run
+cd neo-frontend && npm run build
+cd deploy && npx @azure/static-web-apps-cli start local-deploy   # http://localhost:4280
 ```
 
-#### 2. 建置前端並啟動 SWA CLI 代理
+## 部署
+
+### Docker Compose（推薦）
+
 ```bash
-cd neo-frontend
-npm run build
-cd deploy
-npx swa start local-deploy
+docker-compose up --build -d   # http://localhost:8080
+docker-compose down             # 停止
 ```
-* 服務運行於 `http://localhost:4280`。SWA CLI 會託管靜態檔案（將根路徑 `/` 重定向至 `/home/`），並將 `/api/*` 請求轉發至本地 API 服務 `http://localhost:5058`。
 
----
+### 手動部署
 
-### 📦 一般部署方式 (General Deployment)
-
-不使用容器時的傳統建置與發布步驟：
-
-#### 1. 建置前端靜態資源
 ```bash
-cd neo-frontend
-npm install
-npm run build
-```
-* 編譯後的靜態檔案將輸出至 `neo-frontend/deploy`。
+# 前端建置
+cd neo-frontend && npm install && npm run build
 
-#### 2. 發布後端 .NET API
-```bash
-cd neo-backend
-dotnet publish -c Release -o ./publish
-```
-* 編譯後端為 Release 版本並輸出至 `./publish`。
-
-#### 3. 執行與託管
-將 `deploy` 中的靜態檔案置於網頁伺服器（或 Azure SWA），並執行發布的 .NET 程式，將 API 反向代理導向 .NET 服務。
-
----
-
-### 🚀 容器部署方式 (Container Deployment)
-
-使用 Docker Compose 進行建置與啟動：
-
-#### 1. 啟動所有服務容器
-```bash
-docker-compose up --build -d
-```
-* 建置並啟動 `neo-backend` 與 `neo-frontend` 容器。
-* 前端容器的 `4280` 埠對應至主機的 `8080` 埠。造訪 `http://localhost:8080` 即可瀏覽完整應用程式。
-
-#### 2. 停止並移除容器
-```bash
-docker-compose down
+# 後端發布
+cd neo-backend && dotnet publish -c Release -o ./publish
 ```
 
----
+將 `neo-frontend/deploy` 靜態檔案部署至網頁伺服器或 Azure SWA，後端程式啟動後設定反向代理指向 .NET 服務即可。
