@@ -23,14 +23,13 @@ npm start portal              # 啟動 portal 主模組下所有子模組 (3001/
 
 # 程式碼驗證與建置
 npx nx run <project-name>:typecheck # 僅對修改的專案跑型別檢查 (如：npx nx run home:typecheck)
-# 或是：
 npx nx affected -t typecheck        # 僅對受本次修改影響的專案跑型別檢查
 npx nx test <project-name>    # 僅針對修改的專案跑單元測試 (如：npx nx test home)
 npx nx affected -t test       # 僅測試受本次修改影響的專案
 npm run build <main>          # 編譯指定主模組下所有子模組 (如：npm run build portal)
 npm run build <main>/<sub>    # 僅編譯指定離島子模組 (如：npm run build portal/home)
-npm run lint                  # ESLint 檢查與自動修復 (修改後建議執行)
-npm run format                # Prettier 程式碼美化
+npx eslint <file-path> --fix  # 僅對修改的檔案跑 ESLint 校驗與自動修復 (如：npx eslint apps/portal/home/src/Home.vue --fix)
+npx nx format:write           # 僅對 Git 本次修改的檔案跑 Prettier 格式化美化
 ```
 
 ## 開發規範
