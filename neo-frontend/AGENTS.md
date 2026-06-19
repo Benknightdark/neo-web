@@ -30,6 +30,9 @@ npm run build <main>          # 編譯指定主模組下所有子模組 (如：n
 npm run build <main>/<sub>    # 僅編譯指定離島子模組 (如：npm run build portal/home)
 npx eslint <file-path> --fix  # 僅對修改的檔案跑 ESLint 校驗與自動修復 (如：npx eslint apps/portal/home/src/Home.vue --fix)
 npx nx format:write           # 僅對 Git 本次修改的檔案跑 Prettier 格式化美化
+
+# 測試 SWA 本地代理路由 (需先編譯主模組)
+cd deploy/portal && npx @azure/static-web-apps-cli start local-deploy
 ```
 
 ## 開發規範
