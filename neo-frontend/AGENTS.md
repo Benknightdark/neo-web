@@ -22,7 +22,9 @@ npm start                     # 啟動 portal 主模組下所有子模組 (預�
 npm start portal              # 啟動 portal 主模組下所有子模組 (3001/3002/3003 並行)
 
 # 程式碼驗證與建置
-npm run typecheck             # TypeScript 型別檢查 (修改後必過)
+npx nx run <project-name>:typecheck # 僅對修改的專案跑型別檢查 (如：npx nx run home:typecheck)
+# 或是：
+npx nx affected -t typecheck        # 僅對受本次修改影響的專案跑型別檢查
 npx nx test <project-name>    # 僅針對修改的專案跑單元測試 (如：npx nx test home)
 npx nx affected -t test       # 僅測試受本次修改影響的專案
 npm run build <main>          # 編譯指定主模組下所有子模組 (如：npm run build portal)
