@@ -1,8 +1,19 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 import vue from '@vitejs/plugin-vue';
 import tailwindcss from '@tailwindcss/vite';
-import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import path from 'path';
+
+// These options were migrated by @nx/vite:convert-to-inferred from the project.json file.
+const configValues = { default: {} };
+
+// Determine the correct configValue to use based on the configuration
+const nxConfiguration = process.env.NX_TASK_TARGET_CONFIGURATION ?? 'default';
+
+const options = {
+  ...configValues.default,
+  ...(configValues[nxConfiguration] ?? {}),
+};
 
 export default defineConfig({
   base: '',
@@ -11,10 +22,13 @@ export default defineConfig({
   },
   root: __dirname,
   cacheDir: '../../../node_modules/.vite/apps/home',
-  plugins: [vue(), tailwindcss(), nxViteTsPaths()],
+  resolve: {
+    tsconfigPaths: true,
+  },
+  plugins: [vue(), tailwindcss()],
   build: {
     // 強制輸出到統一的 deploy 目錄
-    outDir: '../../../deploy/portal/home',
+    outDir: path.resolve(__dirname, '../../../deploy/portal/home'),
     emptyOutDir: true,
     reportCompressedSize: true,
     rollupOptions: {
@@ -46,8 +60,7 @@ export default defineConfig({
         target: 'http://localhost:5058',
         changeOrigin: true,
         secure: false,
-      }
-    }
+      },
+    },
   },
 });
-

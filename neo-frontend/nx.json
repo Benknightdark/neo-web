@@ -15,5 +15,23 @@
     }
   },
   "defaultBase": "main",
-  "analytics": false
+  "analytics": false,
+  "plugins": [
+    {
+      "plugin": "@nx/vite/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "serveStaticTargetName": "serve-static",
+        "devTargetName": "dev",
+        "typecheckTargetName": "typecheck"
+      },
+      "include": [
+        "apps/portal/home/**/*",
+        "apps/portal/introduction/**/*",
+        "apps/portal/privacy/**/*"
+      ]
+    }
+  ]
 }

@@ -5,17 +5,10 @@
   "sourceRoot": "apps/portal/introduction/src",
   "targets": {
     "build": {
-      "executor": "@nx/vite:build",
-      "outputs": ["{options.outputPath}"],
+      "outputs": ["{projectRoot}/{options.outDir}", "{projectRoot}/dist", "{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "deploy/portal/introduction"
-      }
-    },
-    "serve": {
-      "executor": "@nx/vite:dev-server",
-      "options": {
-        "buildTarget": "introduction:build"
+        "outDir": "../../../deploy/portal/introduction"
       }
     },
     "test": {
