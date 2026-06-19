@@ -9,7 +9,6 @@
 | [neo-backend/](neo-backend/) | ASP.NET Core 10.0 Web API |
 | [neo-frontend/](neo-frontend/) | Vue 3 前端模組 |
 
-前端編譯產出至 `neo-frontend/deploy`，SWA CLI 託管靜態檔並將 `/api/*` 反向代理至後端（預設 `localhost:5058`），根路徑 `/` 重定向至 `/home/`。
 
 ## 本地開發
 
@@ -21,28 +20,22 @@ cd neo-backend && dotnet run
 cd neo-frontend && npm install && npm start
 ```
 
-本地開發時透過 `http://localhost:3000/src/<模組名稱>/index.html` 存取各模組，例如：
-- `http://localhost:3000/src/home/index.html`
-- `http://localhost:3000/src/introduction/index.html`
-- `http://localhost:3000/src/privacy/index.html`
 
 ### 前端模組建置
 
 ```bash
 cd neo-frontend
 
-npm run build               # 建置所有模組
-npm run build home           # 建置指定模組 (例如：home)
-npm run build home,privacy   # 建置多個模組（逗號分隔）
+npm run build portal             # 建置protal所有模組
+npm run build portal/home           # 建置portal的模組
 ```
 
-產出至 `neo-frontend/deploy/<模組名稱>/`。目前可用模組：`home`、`introduction`、`privacy`。
 
 如需測試 SWA 代理路由：
 
 ```bash
 cd neo-frontend && npm run build
-cd deploy && npx @azure/static-web-apps-cli start local-deploy   # http://localhost:4280
+cd deploy/portal && npx @azure/static-web-apps-cli start local-deploy   # http://localhost:4280
 ```
 
 ## 部署
