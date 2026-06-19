@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+@source "../../../apps/portal/home/src/**/*.vue";
+@source "../../../apps/portal/introduction/src/**/*.vue";
+@source "../../../apps/portal/privacy/src/**/*.vue";
+@source "../../vue-components/src/**/*.vue";
+

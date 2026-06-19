@@ -11,6 +11,13 @@ export default tseslint.config(
   {
     files: ['**/*.ts', '**/*.vue'],
     languageOptions: {
+      globals: {
+        document: 'readonly',
+        window: 'readonly',
+        navigator: 'readonly',
+        fetch: 'readonly',
+        console: 'readonly',
+      },
       parserOptions: {
         parser: tseslint.parser,
         extraFileExtensions: ['.vue'],
@@ -24,6 +31,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['node_modules/', 'dist/', 'dist-temp-*/', 'temp-vite.config.js', 'package-lock.json', 'scripts/'],
+    ignores: ['node_modules/', 'dist/', 'deploy/', 'dist-temp-*/', 'temp-vite.config.js', 'package-lock.json', 'scripts/', '.nx/'],
   }
 );

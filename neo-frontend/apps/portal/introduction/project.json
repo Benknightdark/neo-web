@@ -1,0 +1,27 @@
+{
+  "name": "introduction",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/portal/introduction/src",
+  "targets": {
+    "build": {
+      "outputs": ["{projectRoot}/{options.outDir}", "{projectRoot}/dist", "{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outDir": "../../../deploy/portal/introduction"
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["vitest run --passWithNoTests"]
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["vue-tsc -p apps/portal/introduction/tsconfig.json --noEmit"]
+      }
+    }
+  }
+}
