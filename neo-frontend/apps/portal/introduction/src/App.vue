@@ -4,7 +4,7 @@ import Introduction from './Introduction.vue';
 </script>
 
 <template>
-  <LayoutComponent title="介紹11111112312312312312312">
+  <LayoutComponent title="介紹">
     <Introduction />
   </LayoutComponent>
 </template>

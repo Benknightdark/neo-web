@@ -100,13 +100,25 @@ for (const srcPath of sourcePaths) {
   }
 }
 
-// 2. 生成 staticwebapp.config.json 配置首頁重定向
+// 2. 生成 staticwebapp.config.json 配置首頁重定向與 HTML 快取控制
 const staticWebConfigPath = path.join(deployRootPath, 'staticwebapp.config.json');
 const configContent = {
   "routes": [
     {
       "route": "/",
       "redirect": "/home/"
+    },
+    {
+      "route": "/*.html",
+      "headers": {
+        "Cache-Control": "must-revalidate, max-age=0"
+      }
+    },
+    {
+      "route": "/*/*.html",
+      "headers": {
+        "Cache-Control": "must-revalidate, max-age=0"
+      }
     }
   ]
 };

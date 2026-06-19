@@ -3,6 +3,18 @@
     {
       "route": "/",
       "redirect": "/home/"
+    },
+    {
+      "route": "/*.html",
+      "headers": {
+        "Cache-Control": "must-revalidate, max-age=0"
+      }
+    },
+    {
+      "route": "/*/*.html",
+      "headers": {
+        "Cache-Control": "must-revalidate, max-age=0"
+      }
     }
   ]
 }

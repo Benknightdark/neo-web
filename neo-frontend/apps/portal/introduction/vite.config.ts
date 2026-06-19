@@ -37,9 +37,9 @@ export default defineConfig({
       },
       output: {
         format: 'es',
-        entryFileNames: '[name].js',
-        chunkFileNames: '[name].js',
-        assetFileNames: '[name][extname]',
+        entryFileNames: '[name]-[hash].js',
+        chunkFileNames: '[name]-[hash].js',
+        assetFileNames: '[name]-[hash][extname]',
       },
     },
   },
